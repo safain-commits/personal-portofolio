@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Build outputs
+frontend/dist/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Uploaded media (these are user-uploaded, not source code)
+frontend/public/img/*.jpg
+frontend/public/img/*.jpeg
+frontend/public/img/*.png
+frontend/public/img/*.gif
+frontend/public/img/*.webp
+frontend/public/video/
+frontend/public/3d/
+
+# Database backups
+backend/db/backups/
+
+# Logs
+*.log
+npm-debug.log*
