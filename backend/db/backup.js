@@ -1,39 +1,39 @@
 require('dotenv').config();
-const { Pool } = require('pg');
+const mysql = require('mysql2/promise');
 const fs = require('fs');
 const path = require('path');
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
-});
+const pool = mysql.createPool(process.env.DATABASE_URL || 'mysql://user:password@localhost:3306/portfolio');
 
 async function runBackup() {
-  const client = await pool.connect();
+  const connection = await pool.getConnection();
   try {
     console.log('Starting database backup...');
     
-    // 1. Fetch all projects
-    const projRes = await client.query('SELECT * FROM projects ORDER BY id ASC');
-    const projects = projRes.rows;
+    const [projects] = await connection.execute('SELECT * FROM projects ORDER BY id ASC');
+    const [media] = await connection.execute('SELECT * FROM project_media ORDER BY id ASC');
     
-    // 2. Fetch all media
-    const mediaRes = await client.query('SELECT * FROM project_media ORDER BY id ASC');
-    const media = mediaRes.rows;
-    
-    // 3. Combine them into a single JSON structure
+    // Parse JSON string back to object for clean backup
+    projects.forEach(p => {
+      if (typeof p.tools === 'string') {
+        try { p.tools = JSON.parse(p.tools); } catch(e){}
+      }
+      if (typeof p.tags === 'string') {
+        try { p.tags = JSON.parse(p.tags); } catch(e){}
+      }
+    });
+
     const backupData = {
       timestamp: new Date().toISOString(),
       projects: projects,
       media: media
     };
     
-    // 4. Ensure backups directory exists
     const backupDir = path.join(__dirname, 'backups');
     if (!fs.existsSync(backupDir)) {
       fs.mkdirSync(backupDir, { recursive: true });
     }
     
-    // 5. Write to file
     const dateStr = new Date().toISOString().replace(/[:.]/g, '-');
     const fileName = `backup-${dateStr}.json`;
     const filePath = path.join(backupDir, fileName);
@@ -48,7 +48,7 @@ async function runBackup() {
   } catch (error) {
     console.error('❌ Backup failed:', error);
   } finally {
-    client.release();
+    connection.release();
     await pool.end();
   }
 }

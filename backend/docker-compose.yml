@@ -1,18 +1,19 @@
 version: '3.8'
 
 services:
-  postgres:
-    image: postgres:15-alpine
-    container_name: portfolio-postgres
+  mysql:
+    image: mysql:8.0
+    container_name: portfolio-mysql
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: portfolio
+      MYSQL_ROOT_PASSWORD: password  
+      MYSQL_DATABASE: portfolio
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - mysqldata:/var/lib/mysql
     restart: unless-stopped
 
 volumes:
-  pgdata:
+  mysqldata:

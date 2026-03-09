@@ -273,7 +273,8 @@ app.use((err, req, res, next) => {
     ok: false,
     error: {
       code: "INTERNAL_SERVER_ERROR",
-      message: "An unexpected error occurred."
+      message: err.message,
+      stack: err.stack
     }
   });
 });
