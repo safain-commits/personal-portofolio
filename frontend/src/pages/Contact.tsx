@@ -6,11 +6,11 @@ export default function Contact() {
   useTitle("Contact")
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
-  
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
-    
+
     const formData = new FormData(e.currentTarget)
     const data = Object.fromEntries(formData.entries())
 
@@ -31,14 +31,14 @@ export default function Contact() {
   return (
     <div className="pt-24 lg:pt-32 pb-24 max-w-2xl mx-auto">
       <h1 className="text-5xl md:text-6xl font-bold tracking-tighter mb-8">Contact</h1>
-      
+
       {success ? (
         <div className="p-8 border border-border bg-muted/30 text-center space-y-4">
           <h2 className="text-2xl font-bold">Message Sent</h2>
           <p className="text-muted-foreground">
             Thank you for reaching out. I'll get back to you as soon as possible.
           </p>
-          <button 
+          <button
             onClick={() => setSuccess(false)}
             className="mt-4 underline underline-offset-4 font-semibold"
           >
@@ -51,13 +51,13 @@ export default function Contact() {
             Have a project in mind or want to explore an interdisciplinary approach together?
             Let's connect.
           </p>
-          
+
           <form className="space-y-8" onSubmit={handleSubmit}>
             <div className="space-y-3">
               <label htmlFor="name" className="text-sm font-semibold tracking-wide uppercase">Name</label>
-              <input 
-                type="text" 
-                id="name" 
+              <input
+                type="text"
+                id="name"
                 name="name"
                 required
                 className="w-full border-b border-border bg-transparent py-2 focus:outline-none focus:border-foreground transition-colors text-lg"
@@ -67,9 +67,9 @@ export default function Contact() {
             </div>
             <div className="space-y-3">
               <label htmlFor="email" className="text-sm font-semibold tracking-wide uppercase">Email</label>
-              <input 
-                type="email" 
-                id="email" 
+              <input
+                type="email"
+                id="email"
                 name="email"
                 required
                 className="w-full border-b border-border bg-transparent py-2 focus:outline-none focus:border-foreground transition-colors text-lg"
@@ -79,8 +79,8 @@ export default function Contact() {
             </div>
             <div className="space-y-3">
               <label htmlFor="message" className="text-sm font-semibold tracking-wide uppercase">Message</label>
-              <textarea 
-                id="message" 
+              <textarea
+                id="message"
                 name="message"
                 required
                 rows={4}
@@ -89,8 +89,8 @@ export default function Contact() {
                 disabled={loading}
               />
             </div>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={loading}
               className="bg-primary text-primary-foreground px-8 py-4 font-medium hover:opacity-90 transition-opacity disabled:opacity-50 w-full sm:w-auto min-w-[200px]"
             >
@@ -99,6 +99,30 @@ export default function Contact() {
           </form>
         </>
       )}
+
+      <div className="mt-24 pt-12 border-t border-border">
+        <h2 className="text-2xl font-bold tracking-tight mb-8">Direct Contact</h2>
+        <div className="flex flex-col space-y-6 text-lg">
+          <div className="flex items-center gap-6">
+            <span className="text-muted-foreground w-28 font-semibold uppercase tracking-widest text-sm">Email</span>
+            <a href="mailto:a_sfn@live.com" className="font-medium hover:text-foreground/80 transition-colors underline underline-offset-4 decoration-border hover:decoration-foreground">
+              a_sfn@live.com
+            </a>
+          </div>
+          <div className="flex items-center gap-6">
+            <span className="text-muted-foreground w-28 font-semibold uppercase tracking-widest text-sm">WhatsApp</span>
+            <a href="https://wa.me/6282266663336" target="_blank" rel="noopener noreferrer" className="font-medium hover:text-foreground/80 transition-colors underline underline-offset-4 decoration-border hover:decoration-foreground">
+              +62 822 6666 3336
+            </a>
+          </div>
+          <div className="flex items-center gap-6">
+            <span className="text-muted-foreground w-28 font-semibold uppercase tracking-widest text-sm">Instagram</span>
+            <a href="https://instagram.com/linearsaf" target="_blank" rel="noopener noreferrer" className="font-medium hover:text-foreground/80 transition-colors underline underline-offset-4 decoration-border hover:decoration-foreground">
+              @linearSAF
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
