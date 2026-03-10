@@ -4,21 +4,21 @@ import { useTitle } from "../hooks/useTitle"
 export default function About() {
   useTitle("About")
   const coreSkills = [
-    { name: "Solidworks", level: 5 },
-    { name: "Rhinoceros", level: 5 },
+    { name: "Autodesk Inventor", level: 5 },
+    { name: "Autodesk AutoCAD", level: 5 },
     { name: "Blender", level: 4 },
-    { name: "Autocad", level: 4 },
-    { name: "Illustrator", level: 4 },
-    { name: "Photoshop", level: 3 },
-    { name: "Fusion360", level: 3 },
+    { name: "Solidworks", level: 4 },
+    { name: "Adobe Illustrator", level: 4 },
+    { name: "Adobe Photoshop", level: 3 },
+    { name: "Autodesk Fusion 360", level: 3 },
     { name: "DaVinci Resolve", level: 3 },
   ] as const
 
   const otherSkills = [
-    "Creo Parametric",
-    "Vray",
-    "Grasshopper",
-    "Figma"
+    "SketchUp",
+    "Ansys",
+    "Staad.PRO",
+    "Navisworks"
   ]
 
   return (
@@ -30,8 +30,8 @@ export default function About() {
           Achmad Safain
         </h1>
         <div className="text-sm text-muted-foreground text-right leading-relaxed whitespace-nowrap">
-          <div>18/04/2000</div>
-          <div>Agrigento, Sicily</div>
+          <div>29/06/1991</div>
+          <div>Tuban, Jawa Timur</div>
         </div>
       </div>
 
@@ -65,9 +65,9 @@ export default function About() {
           <section>
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-6">Contacts</h2>
             <div className="text-sm text-muted-foreground space-y-1 leading-relaxed">
-              <div>missinnio51@gmail.com</div>
-              <div>+39 3348355174</div>
-              <div>insta: @emmecinquantuno</div>
+              <div>a_sfn@live.com</div>
+              <div>+62 822 6666 3336</div>
+              <div>insta: @hy_saf</div>
             </div>
           </section>
         </div>
@@ -79,8 +79,8 @@ export default function About() {
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-6">About</h2>
             <div className="text-muted-foreground text-sm leading-relaxed space-y-3">
               <p>
-                Born in Sicily, I'm constantly driven by an irrepressible nature for research and
-                design, as well as a deep bond with the landscapes and culture of the island.
+                As a seasoned Mechanical Drafter and Industrial Designer,
+                I specialize in crafting comprehensive CAD technical drafts and developing high-fidelity 3D models.
               </p>
               <p>
                 I love to delve deeper, explore, focus on interdisciplinarity to approach problems
@@ -95,17 +95,24 @@ export default function About() {
             <div className="space-y-5">
               <div className="flex justify-between items-baseline gap-4">
                 <div>
-                  <h4 className="font-bold text-sm">Master of Science in Design & Engineering</h4>
-                  <p className="text-muted-foreground text-sm mt-0.5">Politecnico di Milano</p>
+                  <h4 className="font-bold text-sm">Bachelor of Data Science</h4>
+                  <p className="text-muted-foreground text-sm mt-0.5">Universitas Terbuka, Surabaya</p>
                 </div>
-                <span className="text-sm text-muted-foreground whitespace-nowrap">23/24 - Today</span>
+                <span className="text-sm text-muted-foreground whitespace-nowrap">25/26 - Today</span>
               </div>
               <div className="flex justify-between items-baseline gap-4">
                 <div>
-                  <h4 className="font-bold text-sm">Bachelor in Industrial Design 110L/110</h4>
-                  <p className="text-muted-foreground text-sm mt-0.5">Università degli Studi di Palermo</p>
+                  <h4 className="font-bold text-sm">Bachelor in Interior Design</h4>
+                  <p className="text-muted-foreground text-sm mt-0.5">Indonesian Institute of the Arts, Surakarta</p>
                 </div>
-                <span className="text-sm text-muted-foreground whitespace-nowrap">19/20 - 22/23</span>
+                <span className="text-sm text-muted-foreground whitespace-nowrap">14/15 - 19/20</span>
+              </div>
+              <div className="flex justify-between items-baseline gap-4">
+                <div>
+                  <h4 className="font-bold text-sm">Bachelor in Informatics Engineering</h4>
+                  <p className="text-muted-foreground text-sm mt-0.5">UPN Veteran Jawa Timur, Surabaya</p>
+                </div>
+                <span className="text-sm text-muted-foreground whitespace-nowrap">11/12 - 14/15</span>
               </div>
             </div>
           </section>
@@ -115,12 +122,12 @@ export default function About() {
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-6">Languages</h2>
             <div className="space-y-4">
               <div>
-                <h4 className="font-bold text-sm">Italian</h4>
+                <h4 className="font-bold text-sm">Indonesian</h4>
                 <p className="text-muted-foreground text-sm">Native language</p>
               </div>
               <div>
                 <h4 className="font-bold text-sm">English</h4>
-                <p className="text-muted-foreground text-sm">ESOL International level C2</p>
+                <p className="text-muted-foreground text-sm">B1 English level</p>
               </div>
             </div>
           </section>

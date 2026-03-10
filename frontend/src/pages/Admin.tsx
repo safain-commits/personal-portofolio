@@ -5,7 +5,7 @@ import { getContacts, createProject, getProjects, getProjectBySlug, updateProjec
 type Project = any;
 
 const EMPTY_FORM = {
-  slug: '', title: '', summary: '', industry: '', role: '', 
+  slug: '', title: '', summary: '', industry: '', role: '',
   problem: '', constraints: '', approach: '', result: '',
   tools: '', tags: '', featured: false, imageUrl: '',
   is3d: false, modelUrl: '', backgroundImageUrl: '', videoUrl: ''
@@ -15,12 +15,12 @@ export default function Admin() {
   useTitle("Admin Dashboard")
   const [authHeader, setAuthHeader] = useState<string | null>(null)
   const [loginForm, setLoginForm] = useState({ user: '', pass: '' })
-  
+
   const [contacts, setContacts] = useState<any[]>([])
   const [projectsList, setProjectsList] = useState<Project[]>([])
   const [activeTab, setActiveTab] = useState<'messages' | 'projects' | 'form'>('projects')
   const [editingSlug, setEditingSlug] = useState<string | null>(null)
-  
+
   const [projForm, setProjForm] = useState(EMPTY_FORM)
   const [projLoading, setProjLoading] = useState(false)
   const [uploadLoading, setUploadLoading] = useState(false)
@@ -143,7 +143,7 @@ export default function Admin() {
   const handleDelete = async (slug: string) => {
     if (!authHeader) return
     if (!window.confirm("Are you sure you want to delete this project?")) return
-    
+
     const res = await deleteProject(slug, authHeader)
     if (res.success) {
       await loadProjects()
@@ -167,7 +167,7 @@ export default function Admin() {
       videoUrl: projForm.videoUrl
     }
 
-    const res = editingSlug 
+    const res = editingSlug
       ? await updateProject(editingSlug, payload, authHeader)
       : await createProject(payload, authHeader)
 
@@ -187,17 +187,17 @@ export default function Admin() {
       <div className="pt-32 pb-24 max-w-sm mx-auto">
         <h1 className="text-3xl font-bold mb-8">Admin Login</h1>
         <form onSubmit={handleLogin} className="space-y-4">
-          <input 
-            type="text" 
-            placeholder="Username" 
+          <input
+            type="text"
+            placeholder="Username"
             className="w-full border p-2 bg-transparent focus:border-foreground outline-none"
-            value={loginForm.user} onChange={e => setLoginForm({...loginForm, user: e.target.value})}
+            value={loginForm.user} onChange={e => setLoginForm({ ...loginForm, user: e.target.value })}
           />
-          <input 
-            type="password" 
-            placeholder="Password" 
+          <input
+            type="password"
+            placeholder="Password"
             className="w-full border p-2 bg-transparent focus:border-foreground outline-none"
-            value={loginForm.pass} onChange={e => setLoginForm({...loginForm, pass: e.target.value})}
+            value={loginForm.pass} onChange={e => setLoginForm({ ...loginForm, pass: e.target.value })}
           />
           <button type="submit" className="w-full bg-foreground text-background py-3 font-semibold">Login</button>
         </form>
@@ -214,20 +214,20 @@ export default function Admin() {
 
       <div className="flex justify-between items-center mb-8">
         <div className="flex gap-4">
-          <button 
+          <button
             onClick={() => setActiveTab('projects')}
             className={`px-4 py-2 text-sm font-semibold border ${activeTab === 'projects' ? 'bg-foreground text-background' : 'hover:border-foreground'}`}
           >
             Projects
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab('messages')}
             className={`px-4 py-2 text-sm font-semibold border ${activeTab === 'messages' ? 'bg-foreground text-background' : 'hover:border-foreground'}`}
           >
             Messages
           </button>
         </div>
-        
+
         {activeTab === 'projects' && (
           <button onClick={openCreateForm} className="bg-foreground text-background px-4 py-2 text-sm font-semibold">
             + New Project
@@ -236,26 +236,43 @@ export default function Admin() {
       </div>
 
       {activeTab === 'messages' && (
-        <div className="overflow-x-auto border">
-          <table className="w-full text-left text-sm whitespace-nowrap">
+        <div className="border bg-card/30 rounded-md">
+          <table className="w-full text-left text-sm">
             <thead className="bg-muted text-muted-foreground uppercase text-xs">
               <tr>
-                <th className="p-4">Date</th>
-                <th className="p-4">Name</th>
-                <th className="p-4">Email</th>
-                <th className="p-4 w-full">Message</th>
+                <th className="p-4 w-32">Date</th>
+                <th className="p-4 w-48">Sender</th>
+                <th className="p-4">Message</th>
               </tr>
             </thead>
             <tbody>
               {contacts.length === 0 && (
-                <tr><td colSpan={4} className="p-4 text-center">No messages yet.</td></tr>
+                <tr>
+                  <td colSpan={3} className="p-12 text-center text-muted-foreground">
+                    <p className="text-lg mb-2">No messages yet.</p>
+                    <p className="text-sm">Submissions from the Contact page will appear here.</p>
+                  </td>
+                </tr>
               )}
               {contacts.map(c => (
-                <tr key={c.id} className="border-t">
-                  <td className="p-4">{new Date(c.created_at).toLocaleDateString()}</td>
-                  <td className="p-4 font-medium">{c.name}</td>
-                  <td className="p-4">{c.email}</td>
-                  <td className="p-4 whitespace-normal min-w-[300px]">{c.message}</td>
+                <tr key={c.id} className="border-t hover:bg-muted/10 transition-colors align-top">
+                  <td className="p-4 whitespace-nowrap text-muted-foreground">
+                    {new Date(c.created_at).toLocaleDateString('id-ID', {
+                      day: '2-digit', month: 'short', year: 'numeric',
+                      hour: '2-digit', minute: '2-digit'
+                    })}
+                  </td>
+                  <td className="p-4">
+                    <div className="font-semibold text-foreground">{c.name}</div>
+                    <a href={`mailto:${c.email}`} className="text-blue-500 hover:underline mt-1 block break-all">
+                      {c.email}
+                    </a>
+                  </td>
+                  <td className="p-4">
+                    <div className="bg-muted/20 p-4 rounded border border-border/50 text-foreground whitespace-pre-wrap leading-relaxed max-w-3xl">
+                      {c.message}
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -298,24 +315,24 @@ export default function Admin() {
             <h2 className="text-2xl font-bold">{editingSlug ? 'Edit Project' : 'Create New Project'}</h2>
             <button onClick={() => setActiveTab('projects')} className="text-sm underline">Cancel</button>
           </div>
-          
+
           <form onSubmit={handleProjectSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-muted/20 p-6 border">
             <div className="space-y-4">
               <div>
                 <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground block mb-1">Title *</label>
-                <input required type="text" className="w-full border p-2 bg-background outline-none" value={projForm.title} onChange={e => setProjForm({...projForm, title: e.target.value})} />
+                <input required type="text" className="w-full border p-2 bg-background outline-none" value={projForm.title} onChange={e => setProjForm({ ...projForm, title: e.target.value })} />
               </div>
               <div>
                 <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground block mb-1">Slug (URL-friendly) *</label>
-                <input required type="text" className="w-full border p-2 bg-background outline-none" value={projForm.slug} onChange={e => setProjForm({...projForm, slug: e.target.value})} />
+                <input required type="text" className="w-full border p-2 bg-background outline-none" value={projForm.slug} onChange={e => setProjForm({ ...projForm, slug: e.target.value })} />
               </div>
               <div>
                 <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground block mb-1">Industry</label>
-                <input type="text" className="w-full border p-2 bg-background outline-none" value={projForm.industry} onChange={e => setProjForm({...projForm, industry: e.target.value})} />
+                <input type="text" className="w-full border p-2 bg-background outline-none" value={projForm.industry} onChange={e => setProjForm({ ...projForm, industry: e.target.value })} />
               </div>
               <div>
                 <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground block mb-1">Role</label>
-                <input type="text" className="w-full border p-2 bg-background outline-none" value={projForm.role} onChange={e => setProjForm({...projForm, role: e.target.value})} />
+                <input type="text" className="w-full border p-2 bg-background outline-none" value={projForm.role} onChange={e => setProjForm({ ...projForm, role: e.target.value })} />
               </div>
               <div>
                 <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground block mb-1">Project Image</label>
@@ -350,11 +367,11 @@ export default function Admin() {
                 )}
               </div>
               <div className="flex items-center gap-2 pt-2">
-                <input type="checkbox" id="featured" checked={projForm.featured} onChange={e => setProjForm({...projForm, featured: e.target.checked})} />
+                <input type="checkbox" id="featured" checked={projForm.featured} onChange={e => setProjForm({ ...projForm, featured: e.target.checked })} />
                 <label htmlFor="featured" className="text-sm font-semibold">Featured Project (Hero Display)</label>
               </div>
               <div className="flex items-center gap-2 pt-2">
-                <input type="checkbox" id="is3d" checked={projForm.is3d} onChange={e => setProjForm({...projForm, is3d: e.target.checked})} />
+                <input type="checkbox" id="is3d" checked={projForm.is3d} onChange={e => setProjForm({ ...projForm, is3d: e.target.checked })} />
                 <label htmlFor="is3d" className="text-sm font-semibold">3D Project</label>
               </div>
               {projForm.is3d && (
@@ -371,24 +388,24 @@ export default function Admin() {
             <div className="space-y-4">
               <div>
                 <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground block mb-1">Summary</label>
-                <textarea rows={2} className="w-full border p-2 bg-background outline-none" value={projForm.summary} onChange={e => setProjForm({...projForm, summary: e.target.value})} />
+                <textarea rows={2} className="w-full border p-2 bg-background outline-none" value={projForm.summary} onChange={e => setProjForm({ ...projForm, summary: e.target.value })} />
               </div>
               <div>
                 <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground block mb-1">Problem Statement</label>
-                <textarea rows={2} className="w-full border p-2 bg-background outline-none" value={projForm.problem} onChange={e => setProjForm({...projForm, problem: e.target.value})} />
+                <textarea rows={2} className="w-full border p-2 bg-background outline-none" value={projForm.problem} onChange={e => setProjForm({ ...projForm, problem: e.target.value })} />
               </div>
               <div>
                 <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground block mb-1">Approach & Result</label>
-                <textarea rows={2} className="w-full border p-2 bg-background outline-none" placeholder="Approach..." value={projForm.approach} onChange={e => setProjForm({...projForm, approach: e.target.value})} />
-                <textarea rows={2} className="w-full border p-2 bg-background outline-none mt-2" placeholder="Result..." value={projForm.result} onChange={e => setProjForm({...projForm, result: e.target.value})} />
+                <textarea rows={2} className="w-full border p-2 bg-background outline-none" placeholder="Approach..." value={projForm.approach} onChange={e => setProjForm({ ...projForm, approach: e.target.value })} />
+                <textarea rows={2} className="w-full border p-2 bg-background outline-none mt-2" placeholder="Result..." value={projForm.result} onChange={e => setProjForm({ ...projForm, result: e.target.value })} />
               </div>
               <div>
                 <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground block mb-1">Tools (comma separated)</label>
-                <input type="text" placeholder="Solidworks, Blender" className="w-full border p-2 bg-background outline-none" value={projForm.tools} onChange={e => setProjForm({...projForm, tools: e.target.value})} />
+                <input type="text" placeholder="Solidworks, Blender" className="w-full border p-2 bg-background outline-none" value={projForm.tools} onChange={e => setProjForm({ ...projForm, tools: e.target.value })} />
               </div>
               <div>
                 <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground block mb-1">Tags (comma separated)</label>
-                <input type="text" placeholder="Industrial Design, 3D Modeling" className="w-full border p-2 bg-background outline-none" value={projForm.tags} onChange={e => setProjForm({...projForm, tags: e.target.value})} />
+                <input type="text" placeholder="Industrial Design, 3D Modeling" className="w-full border p-2 bg-background outline-none" value={projForm.tags} onChange={e => setProjForm({ ...projForm, tags: e.target.value })} />
               </div>
             </div>
             <div className="md:col-span-2 mt-4">

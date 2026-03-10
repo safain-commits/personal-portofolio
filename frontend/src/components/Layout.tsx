@@ -20,7 +20,7 @@ function Navbar() {
     <header className="fixed top-0 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50 border-b border-border/50">
       <div className="container mx-auto px-6 h-16 flex items-center justify-between">
         <Link to="/" onClick={() => setIsMenuOpen(false)} className="z-50">
-          <img src={safLogo} alt="Safain Logo" className="h-8 lg:h-9 w-auto theme-invert" />
+          <img src={safLogo} alt="Safain Logo" className="h-10 lg:h-12 w-auto theme-invert" />
         </Link>
 
         {/* Desktop Nav */}

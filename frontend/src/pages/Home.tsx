@@ -50,7 +50,7 @@ export default function Home() {
         </div>
 
         {/* Illustration & Bottom Text Area */}
-        <div className="mt-10 md:mt-10 w-full max-w-6xl relative px-4 sm:px-6 lg:px-24 flex flex-col items-center">
+        <div className="mt-3 md:mt-10 w-full max-w-6xl relative px-6 sm:px-6 lg:px-24 flex flex-col items-center">
           {/* The illustration */}
           <div className="relative w-full flex justify-center items-center">
             <img
@@ -63,21 +63,97 @@ export default function Home() {
             />
 
             {/* Floating Text — justified left & right */}
-            <div className="absolute bottom-0 md:bottom-8 left-0 md:left-8 lg:left-16 text-xl sm:text-2xl md:text-3xl font-black leading-tight tracking-tighter text-left">
+            <div className="absolute bottom-0 md:bottom-8 left-0 md:left-8 lg:left-16 text-l sm:text-2xl md:text-3xl font-black leading-tight tracking-tighter text-left">
               Industrial<br />Design
             </div>
-            <div className="absolute bottom-0 md:bottom-8 right-0 md:right-8 lg:right-16 text-xl sm:text-2xl md:text-3xl font-black leading-tight tracking-tighter text-right">
+            <div className="absolute bottom-0 md:bottom-8 right-0 md:right-8 lg:right-16 text-l sm:text-2xl md:text-3xl font-black leading-tight tracking-tighter text-right">
               Design &<br />Engineering
             </div>
           </div>
         </div>
       </section>
 
+      {/* Skills Snippet */}
+      <section className="mb-16 sm:mb-16 md:mb-20 lg:mb-28 mt-0 sm:mt-0 lg:mt-0 w-screen relative left-1/2 -translate-x-1/2 bg-muted">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:py-24 lg:py-48 py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.618fr] gap-16 lg:gap-24">
+
+            {/* Left Column — Expertise & Skills */}
+            <div className="flex flex-col justify-between h-full space-y-12">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-6 font-joystix">Expertise</h2>
+                <p className="text-muted-foreground leading-relaxed max-w-sm">
+                  A comprehensive toolkit spanning 3D CAD modeling, rendering, and traditional 2D drafting.
+                </p>
+              </div>
+              <div className="space-y-2 max-w-sm">
+                <SkillProfile name="Autodesk Inventor" level={5} />
+                <SkillProfile name="Autodesk AutoCAD" level={5} />
+                <SkillProfile name="Blender" level={4} />
+                <SkillProfile name="Solidworks" level={4} />
+                <SkillProfile name="DaVinci Resolve" level={4} />
+                <SkillProfile name="Ilustrator" level={4} />
+              </div>
+              <Link to="/about" className="inline-block mt-8 font-semibold hover:underline underline-offset-4">
+                More about my capabilities &rarr;
+              </Link>
+            </div>
+
+            {/* Right Column — Education & Languages */}
+            <div className="flex flex-col justify-between h-full space-y-12">
+              {/* Education */}
+              <section>
+                <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-6 mt-1 lg:mt-2">Education</h3>
+                <div className="space-y-5">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-2 sm:gap-4">
+                    <div>
+                      <h4 className="font-bold text-sm">Bachelor of Data Science</h4>
+                      <p className="text-muted-foreground text-sm mt-0.5">Universitas Terbuka, Surabaya</p>
+                    </div>
+                    <span className="text-sm text-muted-foreground whitespace-nowrap">25/26 - Today</span>
+                  </div>
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-2 sm:gap-4">
+                    <div>
+                      <h4 className="font-bold text-sm">Interior Design</h4>
+                      <p className="text-muted-foreground text-sm mt-0.5">Indonesian Institute of the Arts, Surakarta</p>
+                    </div>
+                    <span className="text-sm text-muted-foreground whitespace-nowrap">14/15 - 19/20</span>
+                  </div>
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-2 sm:gap-4">
+                    <div>
+                      <h4 className="font-bold text-sm">Bachelor of Informatics Engineering</h4>
+                      <p className="text-muted-foreground text-sm mt-0.5">UPN Veteran, Jawa Timur</p>
+                    </div>
+                    <span className="text-sm text-muted-foreground whitespace-nowrap">11/12 - 14/15</span>
+                  </div>
+                </div>
+              </section>
+
+              {/* Languages */}
+              <section>
+                <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-6">Languages</h3>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-bold text-sm">Indonesian</h4>
+                    <p className="text-muted-foreground text-sm">Native language</p>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-sm">English</h4>
+                    <p className="text-muted-foreground text-sm">B1 English level</p>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* Selected Projects */}
-      <section className="w-screen relative left-1/2 -translate-x-1/2">
+      <section className="pt-0 sm:pt-0 md:pt-8 lg:pt-16 pb-16 sm:pb-16 md:pb-20 lg:pb-28 w-screen relative left-1/2 -translate-x-1/2">
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-end mb-12 border-b border-border pb-4">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-joystix">Works</h2>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Works</h2>
             <Link to="/projects" className="font-semibold hover:underline underline-offset-4 hidden sm:block">
               See all projects &rarr;
             </Link>
@@ -106,29 +182,6 @@ export default function Home() {
               ))}
             </div>
           )}
-        </div>
-      </section>
-
-      {/* Skills Snippet */}
-      <section className="mb-0 mt-16 sm:mt-24 lg:mt-32 w-screen relative left-1/2 -translate-x-1/2 bg-muted">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:py-24 lg:py-48 py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-6 font-joystix">Expertise</h2>
-              <p className="text-muted-foreground leading-relaxed max-w-md">
-                A comprehensive toolkit spanning 3D CAD modeling, rendering, and traditional 2D drafting.
-              </p>
-              <Link to="/about" className="inline-block mt-8 font-semibold hover:underline underline-offset-4">
-                More about my capabilities &rarr;
-              </Link>
-            </div>
-            <div className="space-y-4 max-w-sm lg:ml-auto w-full">
-              <SkillProfile name="Solidworks" level={5} />
-              <SkillProfile name="Rhinoceros" level={5} />
-              <SkillProfile name="Blender" level={4} />
-              <SkillProfile name="Autocad" level={4} />
-            </div>
-          </div>
         </div>
       </section>
 
