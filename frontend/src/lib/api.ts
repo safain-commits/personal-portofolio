@@ -21,7 +21,12 @@ export interface Project {
   media?: { id: string; type: 'image' | 'video'; url: string; alt?: string }[]
 }
 
-const API_BASE_URL = `http://${window.location.hostname}:5000`;
+// Pada mode development (npm run dev), kita arahkan ke port 5000 langsung.
+// Pada mode production (di VPS), Nginx akan mengurus proxy dari rute `/api` ke port 5000, 
+// agar tidak terkena Mixed Content block jika nanti memakai HTTPS.
+const API_BASE_URL = import.meta.env.PROD 
+  ? '/api' 
+  : `http://${window.location.hostname}:5000`;
 
 export async function getProjects(query?: string, category?: string): Promise<Project[]> {
   const url = new URL(`${API_BASE_URL}/projects`);
