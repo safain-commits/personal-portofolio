@@ -170,7 +170,7 @@ const adminAuth = (req, res, next) => {
     return next();
   }
 
-  res.set('WWW-Authenticate', 'Basic realm="401"');
+  // Menghapus 'WWW-Authenticate' header agar browser tidak memunculkan popup native.
   res.status(401).json({ ok: false, error: { code: 'UNAUTHORIZED', message: 'Authentication required' }});
 };
 
