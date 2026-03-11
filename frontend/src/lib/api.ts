@@ -24,9 +24,9 @@ export interface Project {
 // Pada mode development (npm run dev), kita arahkan ke port 5000 langsung.
 // Pada mode production (di VPS), Nginx akan mengurus proxy dari rute `/api` ke port 5000, 
 // agar tidak terkena Mixed Content block jika nanti memakai HTTPS.
-const API_BASE_URL = import.meta.env.PROD 
-  ? `${window.location.origin}/api` 
-  : `http://${window.location.hostname}:5000`;
+const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? `http://${window.location.hostname}:5000`
+  : `${window.location.origin}/api`;
 
 export async function getProjects(query?: string, category?: string): Promise<Project[]> {
   const url = new URL(`${API_BASE_URL}/projects`);
