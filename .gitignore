@@ -16,11 +16,6 @@ Thumbs.db
 .idea/
 
 # Uploaded media (these are user-uploaded, not source code)
-frontend/public/img/*.jpg
-frontend/public/img/*.jpeg
-frontend/public/img/*.png
-frontend/public/img/*.gif
-frontend/public/img/*.webp
 frontend/public/video/
 frontend/public/3d/
 
