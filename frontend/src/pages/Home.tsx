@@ -121,7 +121,7 @@ export default function Home() {
                   </div>
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-2 sm:gap-4">
                     <div>
-                      <h4 className="font-bold text-sm">Bachelor of Informatics Engineering</h4>
+                      <h4 className="font-bold text-sm">Bachelor in Informatics Engineering</h4>
                       <p className="text-muted-foreground text-sm mt-0.5">UPN Veteran, Jawa Timur</p>
                     </div>
                     <span className="text-sm text-muted-foreground whitespace-nowrap">11/12 - 14/15</span>
