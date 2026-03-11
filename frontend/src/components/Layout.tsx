@@ -82,8 +82,8 @@ function Footer() {
       <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
         <div>&copy; {new Date().getFullYear()} Safain A. All rights reserved.</div>
         <div className="flex gap-4">
-          <a href="#" className="hover:text-foreground transition-colors">LinkedIn</a>
-          <a href="#" className="hover:text-foreground transition-colors">Behance</a>
+          <a href="https://www.linkedin.com/in/achmad-safain/" className="hover:text-foreground transition-colors" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://www.instagram.com/hy_saf/" className="hover:text-foreground transition-colors" target="_blank" rel="noopener noreferrer">Instagram</a>
         </div>
       </div>
     </footer>
