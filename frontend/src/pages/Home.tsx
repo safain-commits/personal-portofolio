@@ -107,7 +107,7 @@ export default function Home() {
                 <div className="space-y-5">
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-2 sm:gap-4">
                     <div>
-                      <h4 className="font-bold text-sm">Bachelor of Data Science</h4>
+                      <h4 className="font-bold text-sm">Bachelor in Data Science</h4>
                       <p className="text-muted-foreground text-sm mt-0.5">Universitas Terbuka, Surabaya</p>
                     </div>
                     <span className="text-sm text-muted-foreground whitespace-nowrap">25/26 - Today</span>
@@ -115,7 +115,7 @@ export default function Home() {
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-2 sm:gap-4">
                     <div>
                       <h4 className="font-bold text-sm">Interior Design</h4>
-                      <p className="text-muted-foreground text-sm mt-0.5">Indonesian Institute of the Arts, Surakarta</p>
+                      <p className="text-muted-foreground text-sm mt-0.5">Indonesian Institute in the Arts, Surakarta</p>
                     </div>
                     <span className="text-sm text-muted-foreground whitespace-nowrap">14/15 - 19/20</span>
                   </div>
