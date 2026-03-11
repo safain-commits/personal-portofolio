@@ -10,5 +10,6 @@ export default defineConfig({
   ],
   server: {
     host: true,
+    allowedHosts: ['www.linearsaf.com', 'linearsaf.com'],
   },
 })
