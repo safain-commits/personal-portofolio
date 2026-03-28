@@ -9,14 +9,13 @@ import { stripMarkdown, truncateText } from "../lib/text"
 export default function Home() {
   useTitle("Portfolio")
   const [projects, setProjects] = useState<Project[]>([])
-  const [featuredProject, setFeaturedProject] = useState<Project | null>(null)
+  const [featuredProjects, setFeaturedProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     getProjects().then(data => {
-      const featured = data.find(p => p.featured)
-      setFeaturedProject(featured || null)
-      setProjects(data.filter(p => p.id !== featured?.id).slice(0, 4))
+      setFeaturedProjects(data.filter(p => p.featured))
+      setProjects(data.slice(0, 4))
       setLoading(false)
     })
   }, [])
@@ -65,7 +64,7 @@ export default function Home() {
 
             {/* Floating Text — justified left & right */}
             <div className="absolute bottom-0 md:bottom-8 left-0 md:left-8 lg:left-16 text-l sm:text-2xl md:text-3xl font-black leading-tight tracking-tighter text-left">
-              Industrial<br />Design
+              Drafter &<br />3D Modeling
             </div>
             <div className="absolute bottom-0 md:bottom-8 right-0 md:right-8 lg:right-16 text-l sm:text-2xl md:text-3xl font-black leading-tight tracking-tighter text-right">
               Design &<br />Engineering
@@ -187,84 +186,86 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Project */}
-      {featuredProject && (
-        <section className="mt-0 sm:mt-0 lg:mt-0 pt-0 sm:pt-0 lg:pt-0">
-          <div className="w-screen relative left-1/2 -translate-x-1/2">
-            <Link to={`/projects/${featuredProject.slug}`} className="group block">
-              {/* Desktop layout (lg+): image behind text like a background */}
-              {/* Mobile layout: image on top, text below */}
-              <div className="relative">
-                {/* Image — full width, determines section height */}
-                {(featuredProject.backgroundImageUrl || featuredProject.imageUrl) ? (
-                  <>
-                    {/* Desktop: image as flow element, text overlaid */}
-                    <div className="hidden lg:block">
-                      <img
-                        src={featuredProject.backgroundImageUrl || featuredProject.imageUrl!}
-                        alt={featuredProject.title}
-                        className="w-full h-auto block group-hover:scale-[1.02] transition-transform duration-700"
-                      />
-                      {/* Text overlay on desktop */}
-                      <div className="absolute inset-0 z-10 flex items-center">
-                        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                          <div className="flex flex-col justify-center items-end text-right ml-auto max-w-[50%]">
-                            <span className="text-xs uppercase tracking-[0.3em] font-semibold mb-4 text-black">
-                              Featured Project
-                            </span>
-                            <h2 className="text-4xl md:text-5xl lg:text-7xl font-black uppercase tracking-tight leading-[0.9] mb-6 text-black font-joystix">
-                              {featuredProject.title}
-                            </h2>
-                            <p className="leading-relaxed text-sm md:text-lg max-w-2xl text-black">
-                              {truncateText(stripMarkdown(featuredProject.subtitle || featuredProject.summary), 180)}
-                            </p>
-                            <span className="inline-block mt-8 font-semibold text-sm uppercase tracking-widest group-hover:underline underline-offset-4 text-black">
-                              View Project &rarr;
-                            </span>
+      {/* Featured Projects */}
+      {featuredProjects.length > 0 && (
+        <section className="mt-0 sm:mt-0 lg:mt-0 pt-0 sm:pt-0 lg:pt-0 space-y-10 lg:space-y-14">
+          {featuredProjects.map((featuredProject) => (
+            <div key={featuredProject.id} className="w-screen relative left-1/2 -translate-x-1/2">
+              <Link to={`/projects/${featuredProject.slug}`} className="group block">
+                {/* Desktop layout (lg+): image behind text like a background */}
+                {/* Mobile layout: image on top, text below */}
+                <div className="relative">
+                  {/* Image — full width, determines section height */}
+                  {(featuredProject.backgroundImageUrl || featuredProject.imageUrl) ? (
+                    <>
+                      {/* Desktop: image as flow element, text overlaid */}
+                      <div className="hidden lg:block">
+                        <img
+                          src={featuredProject.backgroundImageUrl || featuredProject.imageUrl!}
+                          alt={featuredProject.title}
+                          className="w-full h-auto block group-hover:scale-[1.02] transition-transform duration-700"
+                        />
+                        {/* Text overlay on desktop */}
+                        <div className="absolute inset-0 z-10 flex items-center">
+                          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex flex-col justify-center items-end text-right ml-auto max-w-[50%]">
+                              <span className="text-xs uppercase tracking-[0.3em] font-semibold mb-4 text-black">
+                                Featured Project
+                              </span>
+                              <h2 className="text-4xl md:text-5xl lg:text-7xl font-black uppercase tracking-tight leading-[0.9] mb-6 text-black font-joystix">
+                                {featuredProject.title}
+                              </h2>
+                              <p className="leading-relaxed text-sm md:text-lg max-w-2xl text-black">
+                                {truncateText(stripMarkdown(featuredProject.subtitle || featuredProject.summary), 180)}
+                              </p>
+                              <span className="inline-block mt-8 font-semibold text-sm uppercase tracking-widest group-hover:underline underline-offset-4 text-black">
+                                View Project &rarr;
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* Mobile: image on top, text below */}
-                    <div className="lg:hidden">
-                      <img
-                        src={featuredProject.backgroundImageUrl || featuredProject.imageUrl!}
-                        alt={featuredProject.title}
-                        className="w-full h-auto block"
-                      />
-                      <div className="p-8">
-                        <span className="text-xs uppercase tracking-[0.3em] font-semibold mb-4 block text-muted-foreground">
-                          Featured Project
-                        </span>
-                        <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight leading-[0.9] mb-6 font-joystix">
-                          {featuredProject.title}
-                        </h2>
-                        <p className="leading-relaxed text-sm md:text-lg max-w-2xl text-muted-foreground">
-                          {truncateText(stripMarkdown(featuredProject.subtitle || featuredProject.summary), 180)}
-                        </p>
-                        <span className="inline-block mt-8 font-semibold text-sm uppercase tracking-widest group-hover:underline underline-offset-4">
-                          View Project &rarr;
-                        </span>
+                      {/* Mobile: image on top, text below */}
+                      <div className="lg:hidden">
+                        <img
+                          src={featuredProject.backgroundImageUrl || featuredProject.imageUrl!}
+                          alt={featuredProject.title}
+                          className="w-full h-auto block"
+                        />
+                        <div className="p-8">
+                          <span className="text-xs uppercase tracking-[0.3em] font-semibold mb-4 block text-muted-foreground">
+                            Featured Project
+                          </span>
+                          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight leading-[0.9] mb-6 font-joystix">
+                            {featuredProject.title}
+                          </h2>
+                          <p className="leading-relaxed text-sm md:text-lg max-w-2xl text-muted-foreground">
+                            {truncateText(stripMarkdown(featuredProject.subtitle || featuredProject.summary), 180)}
+                          </p>
+                          <span className="inline-block mt-8 font-semibold text-sm uppercase tracking-widest group-hover:underline underline-offset-4">
+                            View Project &rarr;
+                          </span>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    /* Fallback when no image */
+                    <div className="bg-muted/30 p-8 lg:p-16 lg:py-32">
+                      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex flex-col justify-center items-end text-right ml-auto lg:max-w-[50%]">
+                          <span className="text-xs uppercase tracking-[0.3em] font-semibold mb-4 text-muted-foreground">Featured Project</span>
+                          <h2 className="text-4xl md:text-5xl lg:text-7xl font-black uppercase tracking-tight leading-[0.9] mb-6 font-joystix">{featuredProject.title}</h2>
+                          <p className="leading-relaxed text-sm md:text-lg max-w-2xl text-muted-foreground">{truncateText(stripMarkdown(featuredProject.subtitle || featuredProject.summary), 180)}</p>
+                          <span className="inline-block mt-8 font-semibold text-sm uppercase tracking-widest group-hover:underline underline-offset-4">View Project &rarr;</span>
+                        </div>
                       </div>
                     </div>
-                  </>
-                ) : (
-                  /* Fallback when no image */
-                  <div className="bg-muted/30 p-8 lg:p-16 lg:py-32">
-                    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                      <div className="flex flex-col justify-center items-end text-right ml-auto lg:max-w-[50%]">
-                        <span className="text-xs uppercase tracking-[0.3em] font-semibold mb-4 text-muted-foreground">Featured Project</span>
-                        <h2 className="text-4xl md:text-5xl lg:text-7xl font-black uppercase tracking-tight leading-[0.9] mb-6 font-joystix">{featuredProject.title}</h2>
-                        <p className="leading-relaxed text-sm md:text-lg max-w-2xl text-muted-foreground">{truncateText(stripMarkdown(featuredProject.subtitle || featuredProject.summary), 180)}</p>
-                        <span className="inline-block mt-8 font-semibold text-sm uppercase tracking-widest group-hover:underline underline-offset-4">View Project &rarr;</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </Link>
-          </div>
+                  )}
+                </div>
+              </Link>
+            </div>
+          ))}
         </section>
       )}
     </div>

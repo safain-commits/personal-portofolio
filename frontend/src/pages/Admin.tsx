@@ -818,18 +818,6 @@ export default function Admin() {
             <button type="button" onClick={restoreDraftToBase} className="underline underline-offset-4 whitespace-nowrap">Clear draft</button>
           </div>
 
-          {submitNotice && (
-            <div className={`mb-4 flex items-start justify-between gap-4 border p-3 text-sm ${submitNotice.type === 'success' ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300' : 'border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-300'}`}>
-              <div>
-                <p className="font-semibold">{submitNotice.type === 'success' ? 'Saved' : 'Save failed'}</p>
-                <p className="mt-1">{submitNotice.message}</p>
-              </div>
-              <button type="button" onClick={() => setSubmitNotice(null)} className="text-xs underline underline-offset-4 whitespace-nowrap">
-                Dismiss
-              </button>
-            </div>
-          )}
-
           <form onSubmit={handleProjectSubmit} className="space-y-8 bg-muted/20 p-6 lg:p-8 border">
             <section className="space-y-5">
               <div className="flex flex-col gap-1">
@@ -1175,12 +1163,20 @@ export default function Admin() {
               </div>
             </section>
 
-            <div className="sticky bottom-4 z-10 mt-2 pt-4 border-t flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 rounded-lg p-4 shadow-sm">
-              <div className="text-sm text-muted-foreground space-y-1">
-                <p>Subtitle, hero image, gallery, drawing, video, dan 3D model sekarang tersinkron ke detail page baru, termasuk preset + advanced viewer override per project.</p>
-                <p className="text-xs">Hero: {projForm.heroImageUrl ? '1' : '0'} · Gallery: {projForm.galleryImages.length} · Drawings: {projForm.drawingImages.length}</p>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            <div className="sticky bottom-4 z-20 mt-2 pt-4 border-t space-y-3 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 rounded-lg p-4 shadow-sm">
+              {submitNotice && (
+                <div className={`flex items-start justify-between gap-4 border p-3 text-sm rounded-md ${submitNotice.type === 'success' ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300' : 'border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-300'}`}>
+                  <div>
+                    <p className="font-semibold">{submitNotice.type === 'success' ? 'Saved' : 'Save failed'}</p>
+                    <p className="mt-1">{submitNotice.message}</p>
+                  </div>
+                  <button type="button" onClick={() => setSubmitNotice(null)} className="text-xs underline underline-offset-4 whitespace-nowrap">
+                    Dismiss
+                  </button>
+                </div>
+              )}
+
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 w-full">
                 <button
                   type="button"
                   onClick={() => {

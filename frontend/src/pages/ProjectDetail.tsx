@@ -137,7 +137,11 @@ export default function ProjectDetail() {
             <video
               src={project.videoUrl}
               controls
+              controlsList="nodownload noremoteplayback"
+              disablePictureInPicture
+              disableRemotePlayback
               playsInline
+              onContextMenu={(event) => event.preventDefault()}
               className="w-full aspect-[16/9] border border-border/60 bg-black object-contain rounded-sm"
             />
           </section>
