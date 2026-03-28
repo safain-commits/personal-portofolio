@@ -4,6 +4,7 @@ import ProjectCard from "../components/ProjectCard"
 import SkillProfile from "../components/SkillProfile"
 import { getProjects, type Project } from "../lib/api"
 import { useTitle } from "../hooks/useTitle"
+import { stripMarkdown, truncateText } from "../lib/text"
 
 export default function Home() {
   useTitle("Portfolio")
@@ -177,7 +178,8 @@ export default function Home() {
                   title={project.title}
                   slug={project.slug}
                   category={project.category}
-                  imageUrl={project.imageUrl}
+                  imageUrl={project.heroImageUrl || project.imageUrl}
+                  subtitle={project.subtitle}
                 />
               ))}
             </div>
@@ -214,7 +216,7 @@ export default function Home() {
                               {featuredProject.title}
                             </h2>
                             <p className="leading-relaxed text-sm md:text-lg max-w-2xl text-black">
-                              {featuredProject.summary}
+                              {truncateText(stripMarkdown(featuredProject.subtitle || featuredProject.summary), 180)}
                             </p>
                             <span className="inline-block mt-8 font-semibold text-sm uppercase tracking-widest group-hover:underline underline-offset-4 text-black">
                               View Project &rarr;
@@ -239,7 +241,7 @@ export default function Home() {
                           {featuredProject.title}
                         </h2>
                         <p className="leading-relaxed text-sm md:text-lg max-w-2xl text-muted-foreground">
-                          {featuredProject.summary}
+                          {truncateText(stripMarkdown(featuredProject.subtitle || featuredProject.summary), 180)}
                         </p>
                         <span className="inline-block mt-8 font-semibold text-sm uppercase tracking-widest group-hover:underline underline-offset-4">
                           View Project &rarr;
@@ -254,7 +256,7 @@ export default function Home() {
                       <div className="flex flex-col justify-center items-end text-right ml-auto lg:max-w-[50%]">
                         <span className="text-xs uppercase tracking-[0.3em] font-semibold mb-4 text-muted-foreground">Featured Project</span>
                         <h2 className="text-4xl md:text-5xl lg:text-7xl font-black uppercase tracking-tight leading-[0.9] mb-6 font-joystix">{featuredProject.title}</h2>
-                        <p className="leading-relaxed text-sm md:text-lg max-w-2xl text-muted-foreground">{featuredProject.summary}</p>
+                        <p className="leading-relaxed text-sm md:text-lg max-w-2xl text-muted-foreground">{truncateText(stripMarkdown(featuredProject.subtitle || featuredProject.summary), 180)}</p>
                         <span className="inline-block mt-8 font-semibold text-sm uppercase tracking-widest group-hover:underline underline-offset-4">View Project &rarr;</span>
                       </div>
                     </div>

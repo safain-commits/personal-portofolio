@@ -1,54 +1,65 @@
 import { cn } from "../lib/utils"
-
-export type MediaItem = {
-  id: string
-  type: 'image' | 'video'
-  url: string
-  alt?: string
-}
+import type { ProjectMedia } from "../lib/api"
 
 interface MediaGalleryProps {
-  media: MediaItem[]
+  media: ProjectMedia[]
   className?: string
+  title?: string
+  description?: string
+  variant?: 'gallery' | 'drawing'
 }
 
-export default function MediaGallery({ media, className }: MediaGalleryProps) {
+export default function MediaGallery({ media, className, title = 'Gallery', description, variant = 'gallery' }: MediaGalleryProps) {
   if (!media || media.length === 0) return null
 
   return (
-    <div className={cn("space-y-8 md:space-y-16 mt-16", className)}>
-      <h2 className="text-3xl font-bold tracking-tight border-b border-border pb-4">Gallery</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <section className={cn("space-y-8 md:space-y-10", className)}>
+      <div className="max-w-3xl space-y-3">
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{title}</h2>
+        {description && <p className="text-muted-foreground leading-relaxed">{description}</p>}
+      </div>
+
+      <div className={cn(
+        "grid gap-6",
+        variant === 'drawing' ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-2'
+      )}>
         {media.map((item, index) => (
-          <div 
-            key={item.id} 
+          <figure
+            key={item.id}
             className={cn(
-              "bg-muted overflow-hidden relative",
-              // Make the first item take full width if there's an odd number of items,
-              // or just stagger them interesting ways. Here, making every 3rd item span full.
-              index % 3 === 0 ? "md:col-span-2 aspect-video" : "aspect-square"
+              "overflow-hidden rounded-sm border border-border/60",
+              variant === 'drawing'
+                ? "bg-white p-4"
+                : index === 0 ? "md:col-span-2 bg-muted" : "bg-muted"
             )}
           >
             {item.type === 'image' ? (
-              <img 
-                src={item.url} 
-                alt={item.alt || "Gallery image"} 
+              <img
+                src={item.url}
+                alt={item.alt || title}
                 loading="lazy"
-                className="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-700"
+                className={cn(
+                  "w-full transition-transform duration-700",
+                  variant === 'drawing'
+                    ? "aspect-[4/3] object-contain"
+                    : index === 0 ? "aspect-[16/9] object-cover hover:scale-[1.02]" : "aspect-[4/3] object-cover hover:scale-[1.02]"
+                )}
               />
             ) : (
-              <video 
-                src={item.url} 
-                autoPlay 
-                loop 
-                muted 
-                playsInline
-                className="w-full h-full object-cover"
+              <video
+                src={item.url}
+                controls
+                className="w-full aspect-video bg-black object-contain"
               />
             )}
-          </div>
+            {item.caption && (
+              <figcaption className="px-1 pt-3 text-sm text-muted-foreground leading-relaxed">
+                {item.caption}
+              </figcaption>
+            )}
+          </figure>
         ))}
       </div>
-    </div>
+    </section>
   )
 }

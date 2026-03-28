@@ -17,7 +17,6 @@ export default function Projects() {
   const categories = ["All", "Industrial Design", "Product Design", "Appliance Design", "Engineering"]
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true)
     getProjects(query, category).then(data => {
       setProjects(data)
@@ -26,21 +25,23 @@ export default function Projects() {
   }, [query, category])
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const next = new URLSearchParams(searchParams)
     if (e.target.value) {
-      searchParams.set('q', e.target.value)
+      next.set('q', e.target.value)
     } else {
-      searchParams.delete('q')
+      next.delete('q')
     }
-    setSearchParams(searchParams)
+    setSearchParams(next)
   }
 
   const handleCategory = (c: string) => {
+    const next = new URLSearchParams(searchParams)
     if (c === "All") {
-      searchParams.delete('category')
+      next.delete('category')
     } else {
-      searchParams.set('category', c)
+      next.set('category', c)
     }
-    setSearchParams(searchParams)
+    setSearchParams(next)
   }
 
   return (
@@ -53,7 +54,6 @@ export default function Projects() {
         </p>
       </div>
 
-      {/* Filter and Search */}
       <div className="flex flex-col md:flex-row gap-6 justify-between items-start md:items-center mb-12 pb-6 border-b border-border">
         <div className="flex flex-wrap gap-2">
           {categories.map(c => {
@@ -112,9 +112,10 @@ export default function Projects() {
             <ProjectCard
               key={project.id}
               title={project.title}
+              subtitle={project.subtitle}
               slug={project.slug}
               category={project.category}
-              imageUrl={project.imageUrl}
+              imageUrl={project.heroImageUrl || project.imageUrl}
             />
           ))}
         </div>

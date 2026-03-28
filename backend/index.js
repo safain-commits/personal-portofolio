@@ -5,6 +5,8 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const multer = require('multer');
 const path = require('path');
+const crypto = require('crypto');
+const cookieParser = require('cookie-parser');
 const queries = require('./db/queries');
 
 const app = express();
@@ -76,10 +78,45 @@ const uploadVideo = multer({
 
 // Middleware
 app.use(helmet({ crossOriginResourcePolicy: false }));
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
+app.use(cookieParser());
 app.use(express.json());
 
+const ADMIN_COOKIE_NAME = 'portfolio_admin_session';
+const ADMIN_COOKIE_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
 
+const safeEqual = (a, b) => {
+  if (typeof a !== 'string' || typeof b !== 'string') return false;
+  const aBuf = Buffer.from(a);
+  const bBuf = Buffer.from(b);
+  if (aBuf.length !== bBuf.length) return false;
+  return crypto.timingSafeEqual(aBuf, bBuf);
+};
+
+const buildAdminSessionValue = () => {
+  const user = process.env.ADMIN_USER || '';
+  const pass = process.env.ADMIN_PASS || '';
+  return Buffer.from(`${user}:${pass}`).toString('base64');
+};
+
+const getCookieOptions = (persistent = false) => ({
+  httpOnly: true,
+  sameSite: 'lax',
+  secure: process.env.NODE_ENV === 'production',
+  path: '/',
+  ...(persistent ? { maxAge: ADMIN_COOKIE_TTL_MS } : {})
+});
+
+const extractBasicToken = (req) => (req.headers.authorization || '').split(' ')[1] || '';
+const getAdminCookieToken = (req) => req.cookies?.[ADMIN_COOKIE_NAME] || '';
+
+const isValidAdminToken = (token) => {
+  const expected = buildAdminSessionValue();
+  return Boolean(token) && safeEqual(token, expected);
+};
 
 const contactLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -107,11 +144,13 @@ app.get('/projects', async (req, res, next) => {
       id: p.id,
       slug: p.slug,
       title: p.title,
+      subtitle: p.subtitle || null,
       summary: p.summary,
       tags: p.tags,
       featured: p.featured,
       published_at: p.published_at,
-      imageUrl: p.imageUrl || null,
+      hero_image_url: p.hero_image_url || null,
+      imageUrl: p.hero_image_url || null,
       is_3d: p.is_3d,
       model_url: p.model_url,
       background_image_url: p.background_image_url,
@@ -161,18 +200,44 @@ app.post('/contact', contactLimiter, async (req, res, next) => {
   }
 });
 
-// Admin Basic Auth Middleware
+// Admin Auth Middleware
 const adminAuth = (req, res, next) => {
-  const b64auth = (req.headers.authorization || '').split(' ')[1] || '';
-  const [login, password] = Buffer.from(b64auth, 'base64').toString().split(':');
+  const headerToken = extractBasicToken(req);
+  const cookieToken = getAdminCookieToken(req);
 
-  if (login && password && login === process.env.ADMIN_USER && password === process.env.ADMIN_PASS) {
+  if (isValidAdminToken(headerToken)) {
     return next();
   }
 
-  // Menghapus 'WWW-Authenticate' header agar browser tidak memunculkan popup native.
+  if (isValidAdminToken(cookieToken)) {
+    return next();
+  }
+
+  res.clearCookie(ADMIN_COOKIE_NAME, getCookieOptions());
   res.status(401).json({ ok: false, error: { code: 'UNAUTHORIZED', message: 'Authentication required' }});
 };
+
+app.get('/admin/session', adminAuth, (req, res) => {
+  res.json({ ok: true, data: { authenticated: true } });
+});
+
+app.post('/admin/login', (req, res) => {
+  const { user, pass, remember } = req.body || {};
+  const usernameOk = safeEqual(user || '', process.env.ADMIN_USER || '');
+  const passwordOk = safeEqual(pass || '', process.env.ADMIN_PASS || '');
+
+  if (!usernameOk || !passwordOk) {
+    return res.status(401).json({ ok: false, error: { code: 'UNAUTHORIZED', message: 'Username or password is incorrect' } });
+  }
+
+  res.cookie(ADMIN_COOKIE_NAME, buildAdminSessionValue(), getCookieOptions(Boolean(remember)));
+  res.json({ ok: true, data: { authenticated: true, remember: Boolean(remember) } });
+});
+
+app.post('/admin/logout', (req, res) => {
+  res.clearCookie(ADMIN_COOKIE_NAME, getCookieOptions());
+  res.json({ ok: true, data: { success: true } });
+});
 
 // Admin Routes
 
@@ -214,13 +279,13 @@ app.get('/admin/contacts', adminAuth, async (req, res, next) => {
 
 app.post('/admin/projects', adminAuth, async (req, res, next) => {
   try {
-    const { slug, title, summary, industry, role, problem, constraints, approach, result, tools, tags, featured, imageUrl, is3d, modelUrl, backgroundImageUrl, videoUrl } = req.body;
+    const { slug, title } = req.body || {};
     
     if (!slug || !title) {
        return res.status(400).json({ ok: false, error: { code: "BAD_REQUEST", message: "Slug and title are required" } });
     }
     
-    const project = await queries.insertProject({ slug, title, summary, industry, role, problem, constraints, approach, result, tools, tags, featured, imageUrl, is3d, modelUrl, backgroundImageUrl, videoUrl });
+    const project = await queries.insertProject(req.body || {});
     res.json({ ok: true, data: project });
   } catch (error) {
     // Basic catch for unique constraint failures on slug
@@ -234,13 +299,13 @@ app.post('/admin/projects', adminAuth, async (req, res, next) => {
 app.put('/admin/projects/:slug', adminAuth, async (req, res, next) => {
   try {
     const oldSlug = req.params.slug;
-    const { slug, title, summary, industry, role, problem, constraints, approach, result, tools, tags, featured, imageUrl, is3d, modelUrl, backgroundImageUrl, videoUrl } = req.body;
+    const { slug, title } = req.body || {};
     
     if (!slug || !title) {
        return res.status(400).json({ ok: false, error: { code: "BAD_REQUEST", message: "Slug and title are required" } });
     }
     
-    const project = await queries.updateProject(oldSlug, { slug, title, summary, industry, role, problem, constraints, approach, result, tools, tags, featured, imageUrl, is3d, modelUrl, backgroundImageUrl, videoUrl });
+    const project = await queries.updateProject(oldSlug, req.body || {});
     res.json({ ok: true, data: project });
   } catch (error) {
     if (error.code === '23505') {
@@ -280,6 +345,6 @@ app.use((err, req, res, next) => {
 });
 
 // Start Server
-app.listen(PORT, () => {
-  console.log(`Backend server running on port ${PORT}`);
+app.listen(PORT, '127.0.0.1', () => {
+  console.log(`Backend server running on 127.0.0.1:${PORT}`);
 });

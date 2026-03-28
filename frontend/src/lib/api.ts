@@ -1,13 +1,24 @@
+export interface ProjectMedia {
+  id: string
+  type: 'image' | 'video' | 'pdf' | 'model'
+  url: string
+  alt?: string
+  caption?: string
+  role?: string
+}
+
 export interface Project {
   id: string
   slug: string
   title: string
+  subtitle?: string
   category: string
   tags: string[]
   summary: string
   industry?: string
   role?: string
   imageUrl?: string
+  heroImageUrl?: string
   problem?: string
   approach?: string
   result?: string
@@ -16,94 +27,140 @@ export interface Project {
   featured?: boolean
   is3d?: boolean
   modelUrl?: string
+  viewerPreset?: string
+  viewerRotationPreset?: string
+  viewerAutoRotate?: boolean
+  viewerCameraDistance?: number | null
+  viewerCameraHeight?: number | null
+  viewerOffsetX?: number | null
+  viewerOffsetY?: number | null
   backgroundImageUrl?: string
   videoUrl?: string
-  media?: { id: string; type: 'image' | 'video'; url: string; alt?: string }[]
+  media?: ProjectMedia[]
+  galleryImages?: ProjectMedia[]
+  drawingImages?: ProjectMedia[]
 }
 
-// Pada mode development (npm run dev), kita arahkan ke port 5000 langsung.
-// Pada mode production (di VPS), Nginx akan mengurus proxy dari rute `/api` ke port 5000, 
-// agar tidak terkena Mixed Content block jika nanti memakai HTTPS.
 const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
   ? `http://${window.location.hostname}:5000`
-  : `${window.location.origin}/api`;
+  : `${window.location.origin}/api`
+
+const parseArray = (value: unknown): string[] => {
+  if (Array.isArray(value)) return value.map(String)
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value)
+      return Array.isArray(parsed) ? parsed.map(String) : []
+    } catch {
+      return []
+    }
+  }
+  return []
+}
+
+const parseOptionalNumber = (value: unknown): number | null => {
+  if (value === null || value === undefined || value === '') return null
+  const parsed = Number(value)
+  return Number.isFinite(parsed) ? parsed : null
+}
+
+const inferMediaRole = (media: any, index: number) => {
+  if (media.media_role) return media.media_role
+  if (media.role) return media.role
+  if (media.type === 'image') return index === 0 ? 'hero' : 'gallery'
+  return undefined
+}
+
+const mapMediaItem = (media: any, index: number, title: string): ProjectMedia => ({
+  id: String(media.id ?? `${media.type}-${index}`),
+  type: media.type,
+  url: media.url,
+  alt: media.caption || media.thumbnail_url || title,
+  caption: media.caption || undefined,
+  role: inferMediaRole(media, index)
+})
+
+const mapProjectPayload = (payload: any): Project => {
+  const media = Array.isArray(payload.media)
+    ? payload.media.map((item: any, index: number) => mapMediaItem(item, index, payload.title))
+    : []
+
+  const galleryFromPayload = Array.isArray(payload.gallery_images)
+    ? payload.gallery_images.map((item: any, index: number) => mapMediaItem(item, index, payload.title))
+    : media.filter((item: ProjectMedia) => item.type === 'image' && item.role === 'gallery')
+
+  const drawingsFromPayload = Array.isArray(payload.drawing_images)
+    ? payload.drawing_images.map((item: any, index: number) => mapMediaItem(item, index, payload.title))
+    : media.filter((item: ProjectMedia) => item.type === 'image' && item.role === 'drawing')
+
+  const heroMedia = media.find((item: ProjectMedia) => item.role === 'hero') || media.find((item: ProjectMedia) => item.type === 'image')
+  const heroImageUrl = payload.hero_image_url || payload.heroImageUrl || heroMedia?.url || payload.imageUrl || undefined
+
+  return {
+    id: String(payload.id),
+    slug: payload.slug,
+    title: payload.title,
+    subtitle: payload.subtitle || '',
+    category: parseArray(payload.tags)[0] || 'Project',
+    tags: parseArray(payload.tags),
+    summary: payload.summary || '',
+    industry: payload.industry || '',
+    role: payload.role || '',
+    imageUrl: heroImageUrl,
+    heroImageUrl,
+    problem: payload.problem || '',
+    approach: payload.approach || '',
+    result: payload.result || '',
+    tools: parseArray(payload.tools),
+    constraints: payload.constraints || '',
+    featured: Boolean(payload.featured),
+    is3d: Boolean(payload.is_3d ?? payload.is3d),
+    modelUrl: payload.model_url || payload.modelUrl || null,
+    viewerPreset: payload.viewer_preset || payload.viewerPreset || 'theme-adaptive',
+    viewerRotationPreset: payload.viewer_rotation_preset || payload.viewerRotationPreset || 'none',
+    viewerAutoRotate: payload.viewer_auto_rotate === undefined && payload.viewerAutoRotate === undefined
+      ? true
+      : Boolean(payload.viewer_auto_rotate ?? payload.viewerAutoRotate),
+    viewerCameraDistance: parseOptionalNumber(payload.viewer_camera_distance ?? payload.viewerCameraDistance),
+    viewerCameraHeight: parseOptionalNumber(payload.viewer_camera_height ?? payload.viewerCameraHeight),
+    viewerOffsetX: parseOptionalNumber(payload.viewer_offset_x ?? payload.viewerOffsetX),
+    viewerOffsetY: parseOptionalNumber(payload.viewer_offset_y ?? payload.viewerOffsetY),
+    backgroundImageUrl: payload.background_image_url || payload.backgroundImageUrl || null,
+    videoUrl: payload.video_url || payload.videoUrl || null,
+    media,
+    galleryImages: galleryFromPayload,
+    drawingImages: drawingsFromPayload,
+  }
+}
 
 export async function getProjects(query?: string, category?: string): Promise<Project[]> {
-  const url = new URL(`${API_BASE_URL}/projects`);
-  
-  if (query) url.searchParams.append('q', query);
-  if (category && category !== 'All') url.searchParams.append('category', category);
+  const url = new URL(`${API_BASE_URL}/projects`)
 
-  const response = await fetch(url.toString());
-  if (!response.ok) {
-    throw new Error('Failed to fetch projects');
-  }
-  
-  const json = await response.json();
+  if (query) url.searchParams.append('q', query)
+  if (category && category !== 'All') url.searchParams.append('category', category)
+
+  const response = await fetch(url.toString())
+  if (!response.ok) throw new Error('Failed to fetch projects')
+
+  const json = await response.json()
   if (json.ok && json.data) {
-    // Backend MVP /projects returns list ringkas. If we need images, 
-    // it depends if backend /projects includes imagery. PRD says 'list ringkas'.
-    // We can infer imageUrl if provided or leave undefined.
-    return json.data.map((p: any) => ({
-      ...p,
-      category: p.tags && p.tags.length > 0 ? p.tags[0] : 'Project',
-      imageUrl: p.imageUrl || null,
-      is3d: p.is_3d || false,
-      modelUrl: p.model_url || null,
-      backgroundImageUrl: p.background_image_url || null,
-      videoUrl: p.video_url || null
-    }));
+    return json.data.map((project: any) => mapProjectPayload(project))
   }
-  return [];
+  return []
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
-  const response = await fetch(`${API_BASE_URL}/projects/${slug}`);
+  const response = await fetch(`${API_BASE_URL}/projects/${slug}`)
   if (!response.ok) {
-    if (response.status === 404) return null;
-    throw new Error('Failed to fetch project details');
+    if (response.status === 404) return null
+    throw new Error('Failed to fetch project details')
   }
 
-  const json = await response.json();
+  const json = await response.json()
   if (json.ok && json.data) {
-    const p = json.data;
-    
-    // Process media array if present
-    let processedMedia = undefined;
-    if (p.media && Array.isArray(p.media)) {
-      processedMedia = p.media.map((m: any) => ({
-        id: m.id.toString(),
-        type: m.type,
-        url: m.url,
-        alt: m.caption || m.thumbnail_url || p.title
-      }));
-    }
-
-    return {
-      id: p.id.toString(),
-      slug: p.slug,
-      title: p.title,
-      category: p.tags && p.tags.length > 0 ? p.tags[1] || p.tags[0] : 'Project',
-      tags: p.tags || [],
-      summary: p.summary,
-      industry: p.industry || '',
-      role: p.role || '',
-      problem: p.problem,
-      approach: p.approach,
-      result: p.result,
-      tools: p.tools || [],
-      constraints: p.constraints,
-      featured: p.featured || false,
-      is3d: p.is_3d || false,
-      modelUrl: p.model_url || null,
-      backgroundImageUrl: p.background_image_url || null,
-      videoUrl: p.video_url || null,
-      // First image for hero background
-      imageUrl: processedMedia && processedMedia.length > 0 ? processedMedia[0].url : undefined,
-      media: processedMedia
-    };
+    return mapProjectPayload(json.data)
   }
-  return null;
+  return null
 }
 
 export async function submitContactForm(data: Record<string, unknown>): Promise<{ success: boolean; error?: string }> {
@@ -114,164 +171,200 @@ export async function submitContactForm(data: Record<string, unknown>): Promise<
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
-    });
+    })
 
-    const json = await response.json();
+    const json = await response.json()
     if (!response.ok || !json.ok) {
-        return { success: false, error: json.error?.message || 'Something went wrong.' };
+      return { success: false, error: json.error?.message || 'Something went wrong.' }
     }
 
-    return { success: true };
+    return { success: true }
   } catch (error) {
-    console.error('Contact form submission error:', error);
-    return { success: false, error: 'Network error. Please try again later.' };
+    console.error('Contact form submission error:', error)
+    return { success: false, error: 'Network error. Please try again later.' }
   }
 }
 
-// Admin API
-export async function getContacts(authHeader: string): Promise<any[]> {
-  const response = await fetch(`${API_BASE_URL}/admin/contacts`, {
-    headers: {
-      'Authorization': authHeader
+export async function loginAdmin(user: string, pass: string, remember: boolean): Promise<{ success: boolean; error?: string }> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/admin/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({ user, pass, remember })
+    })
+
+    const json = await response.json()
+    if (!response.ok || !json.ok) {
+      return { success: false, error: json.error?.message || 'Login failed' }
     }
-  });
-  if (!response.ok) throw new Error('Unauthorized or network error');
-  const json = await response.json();
-  return json.data || [];
+
+    return { success: true }
+  } catch (error: any) {
+    return { success: false, error: error.message }
+  }
 }
 
-export async function uploadImage(file: File, authHeader: string): Promise<{ success: boolean; url?: string; error?: string }> {
+export async function getAdminSession(): Promise<boolean> {
   try {
-    const formData = new FormData();
-    formData.append('image', file);
+    const response = await fetch(`${API_BASE_URL}/admin/session`, {
+      credentials: 'include'
+    })
+
+    if (!response.ok) return false
+    const json = await response.json()
+    return Boolean(json.ok)
+  } catch {
+    return false
+  }
+}
+
+export async function logoutAdmin(): Promise<void> {
+  try {
+    await fetch(`${API_BASE_URL}/admin/logout`, {
+      method: 'POST',
+      credentials: 'include'
+    })
+  } catch {
+    // noop
+  }
+}
+
+export async function getContacts(): Promise<any[]> {
+  const response = await fetch(`${API_BASE_URL}/admin/contacts`, {
+    credentials: 'include'
+  })
+  if (!response.ok) throw new Error('Unauthorized or network error')
+  const json = await response.json()
+  return json.data || []
+}
+
+export async function uploadImage(file: File): Promise<{ success: boolean; url?: string; error?: string }> {
+  try {
+    const formData = new FormData()
+    formData.append('image', file)
 
     const response = await fetch(`${API_BASE_URL}/admin/upload`, {
       method: 'POST',
-      headers: {
-        'Authorization': authHeader
-      },
+      credentials: 'include',
       body: formData
-    });
+    })
 
-    const json = await response.json();
+    const json = await response.json()
     if (!response.ok || !json.ok) {
-      return { success: false, error: json.error?.message || 'Upload failed' };
+      return { success: false, error: json.error?.message || 'Upload failed' }
     }
 
-    return { success: true, url: json.data.url };
+    return { success: true, url: json.data.url }
   } catch (error: any) {
-    return { success: false, error: error.message };
+    return { success: false, error: error.message }
   }
 }
 
-export async function upload3dModel(file: File, authHeader: string): Promise<{ success: boolean; url?: string; error?: string }> {
+export async function upload3dModel(file: File): Promise<{ success: boolean; url?: string; error?: string }> {
   try {
-    const formData = new FormData();
-    formData.append('model', file);
+    const formData = new FormData()
+    formData.append('model', file)
 
     const response = await fetch(`${API_BASE_URL}/admin/upload-3d`, {
       method: 'POST',
-      headers: {
-        'Authorization': authHeader
-      },
+      credentials: 'include',
       body: formData
-    });
+    })
 
-    const json = await response.json();
+    const json = await response.json()
     if (!response.ok || !json.ok) {
-      return { success: false, error: json.error?.message || 'Upload failed' };
+      return { success: false, error: json.error?.message || 'Upload failed' }
     }
 
-    return { success: true, url: json.data.url };
+    return { success: true, url: json.data.url }
   } catch (error: any) {
-    return { success: false, error: error.message };
+    return { success: false, error: error.message }
   }
 }
 
-export async function uploadVideo(file: File, authHeader: string): Promise<{ success: boolean; url?: string; error?: string }> {
+export async function uploadVideo(file: File): Promise<{ success: boolean; url?: string; error?: string }> {
   try {
-    const formData = new FormData();
-    formData.append('video', file);
+    const formData = new FormData()
+    formData.append('video', file)
 
     const response = await fetch(`${API_BASE_URL}/admin/upload-video`, {
       method: 'POST',
-      headers: {
-        'Authorization': authHeader
-      },
+      credentials: 'include',
       body: formData
-    });
+    })
 
-    const json = await response.json();
+    const json = await response.json()
     if (!response.ok || !json.ok) {
-      return { success: false, error: json.error?.message || 'Upload failed' };
+      return { success: false, error: json.error?.message || 'Upload failed' }
     }
 
-    return { success: true, url: json.data.url };
+    return { success: true, url: json.data.url }
   } catch (error: any) {
-    return { success: false, error: error.message };
+    return { success: false, error: error.message }
   }
 }
 
-export async function createProject(data: any, authHeader: string): Promise<{ success: boolean; error?: string }> {
+export async function createProject(data: any): Promise<{ success: boolean; error?: string }> {
   try {
     const response = await fetch(`${API_BASE_URL}/admin/projects`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': authHeader
+        'Content-Type': 'application/json'
       },
+      credentials: 'include',
       body: JSON.stringify(data)
-    });
+    })
 
-    const json = await response.json();
+    const json = await response.json()
     if (!response.ok || !json.ok) {
-        return { success: false, error: json.error?.message || 'Failed to create project' };
+      return { success: false, error: json.error?.message || 'Failed to create project' }
     }
 
-    return { success: true };
+    return { success: true }
   } catch (error: any) {
-    return { success: false, error: error.message };
+    return { success: false, error: error.message }
   }
 }
 
-export async function updateProject(oldSlug: string, data: any, authHeader: string): Promise<{ success: boolean; error?: string }> {
+export async function updateProject(oldSlug: string, data: any): Promise<{ success: boolean; error?: string }> {
   try {
     const response = await fetch(`${API_BASE_URL}/admin/projects/${oldSlug}`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': authHeader
+        'Content-Type': 'application/json'
       },
+      credentials: 'include',
       body: JSON.stringify(data)
-    });
+    })
 
-    const json = await response.json();
+    const json = await response.json()
     if (!response.ok || !json.ok) {
-        return { success: false, error: json.error?.message || 'Failed to update project' };
+      return { success: false, error: json.error?.message || 'Failed to update project' }
     }
 
-    return { success: true };
+    return { success: true }
   } catch (error: any) {
-    return { success: false, error: error.message };
+    return { success: false, error: error.message }
   }
 }
 
-export async function deleteProject(slug: string, authHeader: string): Promise<{ success: boolean; error?: string }> {
+export async function deleteProject(slug: string): Promise<{ success: boolean; error?: string }> {
   try {
     const response = await fetch(`${API_BASE_URL}/admin/projects/${slug}`, {
       method: 'DELETE',
-      headers: {
-        'Authorization': authHeader
-      }
-    });
+      credentials: 'include'
+    })
 
-    const json = await response.json();
+    const json = await response.json()
     if (!response.ok || !json.ok) {
-        return { success: false, error: json.error?.message || 'Failed to delete project' };
+      return { success: false, error: json.error?.message || 'Failed to delete project' }
     }
 
-    return { success: true };
+    return { success: true }
   } catch (error: any) {
-    return { success: false, error: error.message };
+    return { success: false, error: error.message }
   }
 }
