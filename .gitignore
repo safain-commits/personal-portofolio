@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Build outputs
+frontend/dist/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Uploaded media (these are user-uploaded, not source code)
+frontend/public/video/
+frontend/public/3d/
+
+# Database backups
+backend/db/backups/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Documentation & References (excluded as requested)
+References/
+PRD-Backend.md
+PRD-Frontend.md
+tips.md
