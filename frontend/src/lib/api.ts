@@ -12,6 +12,11 @@ export interface Project {
   slug: string
   title: string
   subtitle?: string
+  seoTitle?: string
+  seoDescription?: string
+  focusKeywords?: string[]
+  seoIntro?: string
+  heroAlt?: string
   category: string
   tags: string[]
   summary: string
@@ -101,6 +106,11 @@ const mapProjectPayload = (payload: any): Project => {
     slug: payload.slug,
     title: payload.title,
     subtitle: payload.subtitle || '',
+    seoTitle: payload.seo_title || payload.seoTitle || '',
+    seoDescription: payload.seo_description || payload.seoDescription || '',
+    focusKeywords: parseArray(payload.focus_keywords ?? payload.focusKeywords),
+    seoIntro: payload.seo_intro || payload.seoIntro || '',
+    heroAlt: payload.hero_alt || payload.heroAlt || '',
     category: parseArray(payload.tags)[0] || 'Project',
     tags: parseArray(payload.tags),
     summary: payload.summary || '',

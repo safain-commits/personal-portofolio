@@ -49,6 +49,11 @@ const shapeProject = (project, mediaRows = []) => {
   return {
     ...project,
     subtitle: project.subtitle || null,
+    seo_title: project.seo_title || null,
+    seo_description: project.seo_description || null,
+    focus_keywords: normalizeJsonArray(project.focus_keywords),
+    seo_intro: project.seo_intro || null,
+    hero_alt: project.hero_alt || null,
     tools: normalizeJsonArray(project.tools),
     tags: normalizeJsonArray(project.tags),
     hero_image_url: heroMedia?.url || project.hero_image_url || null,
@@ -149,7 +154,7 @@ async function replaceProjectImageMedia(connection, { projectId, title, heroImag
   }
 }
 
-async function insertProject({ slug, title, subtitle, summary, industry, role, problem, constraints, approach, result: resultStr, tools, tags, featured, heroImageUrl, galleryImages, drawingImages, imageUrl, is3d, modelUrl, viewerPreset, viewerRotationPreset, viewerAutoRotate, viewerCameraDistance, viewerCameraHeight, viewerOffsetX, viewerOffsetY, backgroundImageUrl, videoUrl }) {
+async function insertProject({ slug, title, subtitle, seoTitle, seoDescription, focusKeywords, seoIntro, heroAlt, summary, industry, role, problem, constraints, approach, result: resultStr, tools, tags, featured, heroImageUrl, galleryImages, drawingImages, imageUrl, is3d, modelUrl, viewerPreset, viewerRotationPreset, viewerAutoRotate, viewerCameraDistance, viewerCameraHeight, viewerOffsetX, viewerOffsetY, backgroundImageUrl, videoUrl }) {
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
@@ -157,14 +162,19 @@ async function insertProject({ slug, title, subtitle, summary, industry, role, p
     const toJsonArray = (arr) => JSON.stringify(Array.isArray(arr) ? arr : []);
 
     const insertProjQuery = `
-      INSERT INTO projects (slug, title, subtitle, summary, industry, role, problem, constraints, approach, result, tools, tags, featured, is_3d, model_url, viewer_preset, viewer_rotation_preset, viewer_auto_rotate, viewer_camera_distance, viewer_camera_height, viewer_offset_x, viewer_offset_y, background_image_url, video_url)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO projects (slug, title, subtitle, seo_title, seo_description, focus_keywords, seo_intro, hero_alt, summary, industry, role, problem, constraints, approach, result, tools, tags, featured, is_3d, model_url, viewer_preset, viewer_rotation_preset, viewer_auto_rotate, viewer_camera_distance, viewer_camera_height, viewer_offset_x, viewer_offset_y, background_image_url, video_url)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const [projResult] = await connection.execute(insertProjQuery, [
       slug,
       title,
       subtitle || null,
+      seoTitle || null,
+      seoDescription || null,
+      toJsonArray(focusKeywords),
+      seoIntro || null,
+      heroAlt || null,
       summary || null,
       industry || null,
       role || null,
@@ -208,7 +218,7 @@ async function insertProject({ slug, title, subtitle, summary, industry, role, p
   }
 }
 
-async function updateProject(oldSlug, { slug, title, subtitle, summary, industry, role, problem, constraints, approach, result: resultStr, tools, tags, featured, heroImageUrl, galleryImages, drawingImages, imageUrl, is3d, modelUrl, viewerPreset, viewerRotationPreset, viewerAutoRotate, viewerCameraDistance, viewerCameraHeight, viewerOffsetX, viewerOffsetY, backgroundImageUrl, videoUrl }) {
+async function updateProject(oldSlug, { slug, title, subtitle, seoTitle, seoDescription, focusKeywords, seoIntro, heroAlt, summary, industry, role, problem, constraints, approach, result: resultStr, tools, tags, featured, heroImageUrl, galleryImages, drawingImages, imageUrl, is3d, modelUrl, viewerPreset, viewerRotationPreset, viewerAutoRotate, viewerCameraDistance, viewerCameraHeight, viewerOffsetX, viewerOffsetY, backgroundImageUrl, videoUrl }) {
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
@@ -223,7 +233,7 @@ async function updateProject(oldSlug, { slug, title, subtitle, summary, industry
 
     const updateProjQuery = `
       UPDATE projects
-      SET slug = ?, title = ?, subtitle = ?, summary = ?, industry = ?, role = ?, problem = ?, constraints = ?, approach = ?, result = ?, tools = ?, tags = ?, featured = ?, is_3d = ?, model_url = ?, viewer_preset = ?, viewer_rotation_preset = ?, viewer_auto_rotate = ?, viewer_camera_distance = ?, viewer_camera_height = ?, viewer_offset_x = ?, viewer_offset_y = ?, background_image_url = ?, video_url = ?
+      SET slug = ?, title = ?, subtitle = ?, seo_title = ?, seo_description = ?, focus_keywords = ?, seo_intro = ?, hero_alt = ?, summary = ?, industry = ?, role = ?, problem = ?, constraints = ?, approach = ?, result = ?, tools = ?, tags = ?, featured = ?, is_3d = ?, model_url = ?, viewer_preset = ?, viewer_rotation_preset = ?, viewer_auto_rotate = ?, viewer_camera_distance = ?, viewer_camera_height = ?, viewer_offset_x = ?, viewer_offset_y = ?, background_image_url = ?, video_url = ?
       WHERE slug = ?
     `;
 
@@ -231,6 +241,11 @@ async function updateProject(oldSlug, { slug, title, subtitle, summary, industry
       slug,
       title,
       subtitle || null,
+      seoTitle || null,
+      seoDescription || null,
+      toJsonArray(focusKeywords),
+      seoIntro || null,
+      heroAlt || null,
       summary || null,
       industry || null,
       role || null,

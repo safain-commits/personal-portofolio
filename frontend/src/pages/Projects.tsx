@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import ProjectCard from "../components/ProjectCard"
+import SEO from "../components/SEO"
 import { getProjects, type Project } from "../lib/api"
 import { Search } from "lucide-react"
-import { useTitle } from "../hooks/useTitle"
 
 export default function Projects() {
-  useTitle("Work")
   const [searchParams, setSearchParams] = useSearchParams()
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
@@ -46,6 +45,19 @@ export default function Projects() {
 
   return (
     <div className="container mx-auto px-6 pt-24 lg:pt-32 pb-24">
+      <SEO
+        title="Projects & Design Work"
+        description="Browse selected projects by Achmad Safain across industrial design, mechanical drafting, 3D CAD modeling, appliance design, and engineering-focused work."
+        path="/projects"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "Projects & Design Work",
+          description: "Selected portfolio projects spanning industrial design, drafting, and 3D modeling.",
+          url: "https://linearsaf.com/projects"
+        }}
+      />
+
       <div className="max-w-3xl mb-16">
         <h1 className="text-5xl md:text-6xl font-bold tracking-tighter mb-6">Projects</h1>
         <p className="text-xl text-muted-foreground leading-relaxed">

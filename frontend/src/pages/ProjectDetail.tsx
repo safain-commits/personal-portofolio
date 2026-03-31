@@ -1,11 +1,45 @@
 import { useEffect, useState, Suspense, lazy } from "react"
 import { useParams, Link } from "react-router-dom"
 import { getProjectBySlug, type Project } from "../lib/api"
+import SEO from "../components/SEO"
 import { ArrowLeft } from "lucide-react"
 import MediaGallery from "../components/MediaGallery"
 import MarkdownContent from "../components/MarkdownContent"
+import { SITE_URL, toAbsoluteUrl } from "../lib/seo"
+import projectSeoOverrides from "../content/project-seo-overrides.json"
+import { stripMarkdown, truncateText } from "../lib/text"
 
 const ModelViewer = lazy(() => import('../components/ModelViewer'))
+
+type ProjectSeoOverride = {
+  seoTitle?: string
+  seoDescription?: string
+  focusKeywords?: string[]
+  intro?: string
+  heroAlt?: string
+}
+
+const typedProjectSeoOverrides = projectSeoOverrides as Record<string, ProjectSeoOverride>
+
+const uniqueKeywordPhrases = (values: Array<string | null | undefined>) => {
+  const seen = new Set<string>()
+  return values
+    .map(value => value?.trim())
+    .filter((value): value is string => Boolean(value))
+    .filter(value => {
+      const key = value.toLowerCase()
+      if (seen.has(key)) return false
+      seen.add(key)
+      return true
+    })
+}
+
+const buildDisciplineText = (labels: string[]) => {
+  if (labels.length === 0) return 'Design'
+  if (labels.length === 1) return labels[0]
+  if (labels.length === 2) return `${labels[0]} and ${labels[1]}`
+  return `${labels.slice(0, -1).join(', ')}, and ${labels.at(-1)}`
+}
 
 export default function ProjectDetail() {
   const { slug } = useParams()
@@ -17,9 +51,6 @@ export default function ProjectDetail() {
       getProjectBySlug(slug).then(data => {
         setProject(data)
         setLoading(false)
-        if (data) {
-          document.title = `${data.title} | Safain A.`
-        }
       })
     }
   }, [slug])
@@ -27,6 +58,11 @@ export default function ProjectDetail() {
   if (loading) {
     return (
       <div className="pt-24 lg:pt-32 pb-24 max-w-6xl mx-auto px-4 animate-pulse">
+        <SEO
+          title="Project"
+          description="Loading project details from the portfolio."
+          path={slug ? `/projects/${slug}` : '/projects'}
+        />
         <div className="h-12 bg-muted w-1/2 mb-6"></div>
         <div className="aspect-[16/9] bg-muted mb-12"></div>
         <div className="grid gap-6 lg:grid-cols-[1.6fr_0.9fr]">
@@ -44,6 +80,12 @@ export default function ProjectDetail() {
   if (!project) {
     return (
       <div className="pt-24 lg:pt-32 pb-24 text-center max-w-xl mx-auto px-4">
+        <SEO
+          title="Project Not Found"
+          description="The requested portfolio project could not be found."
+          path={slug ? `/projects/${slug}` : '/projects'}
+          noIndex
+        />
         <h1 className="text-4xl font-bold mb-4">Project Not Found</h1>
         <p className="text-muted-foreground mb-8">The project you are looking for does not exist or has been removed.</p>
         <Link to="/projects" className="underline underline-offset-4 font-semibold">
@@ -54,10 +96,94 @@ export default function ProjectDetail() {
   }
 
   const heroImage = project.heroImageUrl || project.imageUrl || project.backgroundImageUrl
-  const headerLabels = [project.category, ...project.tags].filter(Boolean).filter((label, index, arr) => arr.findIndex(item => item?.toLowerCase() === label?.toLowerCase()) === index)
+  const projectSeoOverride = typedProjectSeoOverrides[project.slug]
+  const cmsFocusKeywords = project.focusKeywords || []
+  const headerLabels = uniqueKeywordPhrases([project.category, ...project.tags])
+  const disciplineText = buildDisciplineText(headerLabels)
+  const industryText = project.industry ? project.industry.split('/')[0].trim() : ''
+  const projectKeywordPhrases = uniqueKeywordPhrases([
+    ...cmsFocusKeywords,
+    ...(projectSeoOverride?.focusKeywords || []),
+    `${project.title} case study`,
+    project.category ? `${project.category} case study` : null,
+    project.industry ? `${project.industry} design project` : null,
+    project.industry ? `${project.industry} case study` : null,
+    'Mechanical drafting',
+    'Technical drawings',
+    '3D CAD modeling',
+    'Engineering design',
+    ...project.tags,
+    ...project.tools.map(tool => `${tool} project`),
+  ])
+  const projectCaseStudyTitle = project.seoTitle || projectSeoOverride?.seoTitle || `${project.title} – ${headerLabels[0] || 'Project'} Case Study`
+  const leadOutcomeText = stripMarkdown(project.subtitle || project.summary || project.problem || '')
+  const projectIntro = project.seoIntro || projectSeoOverride?.intro || `${project.title} is a ${disciplineText} case study${industryText ? ` for ${industryText.toLowerCase()} applications` : ''} focused on CAD drafting, technical drawings, and practical engineering problem solving.`
+  const seoDescription = project.seoDescription || projectSeoOverride?.seoDescription || truncateText(
+    `${project.title} is a ${disciplineText} case study${industryText ? ` for ${industryText.toLowerCase()} applications` : ''} focused on CAD drafting, technical drawings, and ${leadOutcomeText.toLowerCase()}`,
+    160
+  )
+  const canonicalPath = `/projects/${project.slug}`
+  const projectStructuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "CreativeWork",
+      name: project.title,
+      headline: project.title,
+      description: seoDescription,
+      url: `${SITE_URL}${canonicalPath}`,
+      image: heroImage ? [toAbsoluteUrl(heroImage)] : undefined,
+      author: {
+        "@type": "Person",
+        name: "Achmad Safain",
+        url: SITE_URL
+      },
+      creator: {
+        "@type": "Person",
+        name: "Achmad Safain",
+        url: SITE_URL
+      },
+      genre: project.category,
+      keywords: projectKeywordPhrases.join(', '),
+      about: project.industry || undefined,
+      inLanguage: 'en'
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: 'Home',
+          item: SITE_URL
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: 'Projects',
+          item: `${SITE_URL}/projects`
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: project.title,
+          item: `${SITE_URL}${canonicalPath}`
+        }
+      ]
+    }
+  ]
 
   return (
     <div className="pt-24 lg:pt-32 pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 lg:space-y-20">
+      <SEO
+        title={projectCaseStudyTitle}
+        description={seoDescription}
+        path={canonicalPath}
+        image={heroImage}
+        type="article"
+        structuredData={projectStructuredData}
+      />
+
       <Link to="/projects" className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground group transition-colors">
         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
         Back to projects
@@ -75,6 +201,9 @@ export default function ProjectDetail() {
                 {project.subtitle}
               </p>
             )}
+            <p className="max-w-4xl text-base sm:text-lg text-muted-foreground leading-relaxed">
+              {projectIntro}
+            </p>
           </div>
           {project.summary && (
             <div className="max-w-4xl border-l-2 border-foreground/20 pl-5">
@@ -85,7 +214,7 @@ export default function ProjectDetail() {
           {heroImage && (
             <div className="space-y-4">
               <div className="aspect-[16/9] overflow-hidden border border-border/60 bg-muted rounded-sm">
-                <img src={heroImage} alt={project.title} className="w-full h-full object-cover" />
+                <img src={heroImage} alt={project.heroAlt || projectSeoOverride?.heroAlt || `${project.title} ${headerLabels[0] || "design"} case study preview with CAD and engineering details`} className="w-full h-full object-cover" />
               </div>
             </div>
           )}
@@ -132,7 +261,7 @@ export default function ProjectDetail() {
           <section className="space-y-4">
             <div className="max-w-3xl">
               <h2 className="text-3xl font-bold tracking-tight mb-3">Showcase Video</h2>
-              <p className="text-muted-foreground leading-relaxed">A motion-driven overview to quickly understand the project outcome and product behavior.</p>
+              <p className="text-muted-foreground leading-relaxed">A motion-driven overview of the industrial design concept, engineering intent, and project outcome.</p>
             </div>
             <video
               src={project.videoUrl}
@@ -151,7 +280,7 @@ export default function ProjectDetail() {
           <section className="space-y-4">
             <div className="max-w-3xl">
               <h2 className="text-3xl font-bold tracking-tight mb-3">3D Model Viewer</h2>
-              <p className="text-muted-foreground leading-relaxed">Interact with the model directly to inspect form, volume, and detail from multiple angles.</p>
+              <p className="text-muted-foreground leading-relaxed">Interact with the 3D CAD model to inspect form, volume, engineering detail, and design intent from multiple angles.</p>
             </div>
             <Suspense fallback={
               <div className="aspect-[16/9] bg-muted flex items-center justify-center border border-border/60 rounded-sm">
@@ -176,15 +305,15 @@ export default function ProjectDetail() {
       <section className="grid gap-8 lg:gap-10">
         <div className="grid gap-8 lg:grid-cols-3">
           <article className="border border-border/70 p-6 lg:p-8 bg-background/60 lg:col-span-1">
-            <h2 className="text-2xl font-bold tracking-tight mb-5">Problem</h2>
+            <h2 className="text-2xl font-bold tracking-tight mb-5">Design Problem</h2>
             <MarkdownContent content={project.problem || project.summary} className="text-muted-foreground" />
           </article>
           <article className="border border-border/70 p-6 lg:p-8 bg-background/60 lg:col-span-1">
-            <h2 className="text-2xl font-bold tracking-tight mb-5">Approach</h2>
+            <h2 className="text-2xl font-bold tracking-tight mb-5">CAD & Design Approach</h2>
             <MarkdownContent content={project.approach} className="text-muted-foreground" fallback="Detailed approach to be added." />
           </article>
           <article className="border border-border/70 p-6 lg:p-8 bg-background/60 lg:col-span-1">
-            <h2 className="text-2xl font-bold tracking-tight mb-5">Result</h2>
+            <h2 className="text-2xl font-bold tracking-tight mb-5">Engineering Result</h2>
             <MarkdownContent content={project.result} className="text-muted-foreground" fallback="Outcome to be documented." />
           </article>
         </div>
@@ -194,7 +323,7 @@ export default function ProjectDetail() {
         <MediaGallery
           media={project.drawingImages}
           title="Technical Drawings"
-          description="Technical views, drafting outputs, and engineering-oriented visuals related to the project."
+          description="Technical drawings, drafting outputs, and engineering-oriented visuals related to the project."
           variant="drawing"
         />
       )}

@@ -11,6 +11,20 @@ const queries = require('./db/queries');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const SITE_URL = (process.env.SITE_URL || process.env.PUBLIC_URL || 'https://linearsaf.com').replace(/\/$/, '');
+
+const toAbsoluteSiteUrl = (pathname = '/') => {
+  if (/^https?:\/\//i.test(pathname)) return pathname;
+  const normalizedPath = pathname.startsWith('/') ? pathname : `/${pathname}`;
+  return normalizedPath === '/' ? `${SITE_URL}/` : `${SITE_URL}${normalizedPath}`;
+};
+
+const escapeXml = (value = '') => String(value)
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, '&apos;');
 
 // Multer storage config for images
 const storage = multer.diskStorage({
@@ -130,6 +144,45 @@ const contactLimiter = rateLimit({
 });
 
 // Main MVP Routes
+app.get('/sitemap.xml', async (req, res, next) => {
+  try {
+    const staticUrls = [
+      { path: '/', changefreq: 'weekly', priority: '1.0' },
+      { path: '/projects', changefreq: 'weekly', priority: '0.9' },
+      { path: '/about', changefreq: 'monthly', priority: '0.7' },
+      { path: '/contact', changefreq: 'monthly', priority: '0.7' },
+    ];
+
+    const projects = await queries.getProjects({});
+    const projectUrls = projects.map((project) => ({
+      path: `/projects/${project.slug}`,
+      changefreq: 'monthly',
+      priority: '0.8',
+      lastmod: project.published_at ? new Date(project.published_at).toISOString() : null,
+    }));
+
+    const urlEntries = [...staticUrls, ...projectUrls]
+      .map(({ path, changefreq, priority, lastmod }) => `
+  <url>
+    <loc>${escapeXml(toAbsoluteSiteUrl(path))}</loc>${lastmod ? `
+    <lastmod>${escapeXml(lastmod)}</lastmod>` : ''}
+    <changefreq>${changefreq}</changefreq>
+    <priority>${priority}</priority>
+  </url>`)
+      .join('');
+
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urlEntries}
+</urlset>`;
+
+    res.set('Content-Type', 'application/xml; charset=utf-8');
+    res.set('Cache-Control', 'public, max-age=3600');
+    res.send(xml);
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.get('/health', (req, res) => {
   res.status(200).json({ ok: true });
 });

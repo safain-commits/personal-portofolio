@@ -1,8 +1,8 @@
+import SEO from "../components/SEO"
 import SkillProfile from "../components/SkillProfile"
-import { useTitle } from "../hooks/useTitle"
+import { SITE_URL } from "../lib/seo"
 
 export default function About() {
-  useTitle("About")
   const coreSkills = [
     { name: "Autodesk Inventor", level: 5 },
     { name: "Autodesk AutoCAD", level: 5 },
@@ -23,8 +23,29 @@ export default function About() {
 
   return (
     <div className="container mx-auto px-6 sm:px-10 lg:px-16 pt-24 lg:pt-32 pb-24 max-w-5xl">
+      <SEO
+        title="About"
+        description="Learn more about Achmad Safain, a mechanical drafter and industrial designer with experience in CAD, 3D modeling, technical drafting, and engineering-focused design work."
+        path="/about"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "AboutPage",
+          name: "About Achmad Safain",
+          url: `${SITE_URL}/about`,
+          mainEntity: {
+            "@type": "Person",
+            name: "Achmad Safain",
+            url: SITE_URL,
+            jobTitle: "Mechanical Drafter and Industrial Designer",
+            alumniOf: [
+              "Universitas Terbuka",
+              "Indonesian Institute of the Arts, Surakarta",
+              "UPN Veteran Jawa Timur"
+            ]
+          }
+        }}
+      />
 
-      {/* Header — Name + Info */}
       <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 mb-16 border-b border-border pb-8">
         <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-none">
           Achmad Safain
@@ -35,12 +56,8 @@ export default function About() {
         </div>
       </div>
 
-      {/* Two-column body */}
       <div className="grid grid-cols-1 md:grid-cols-[1fr_1.618fr] gap-16 lg:gap-24">
-
-        {/* Left Column — Skills + Contacts */}
         <div className="space-y-16">
-          {/* Skills */}
           <section>
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-6">Skills</h2>
             <div className="space-y-2">
@@ -61,7 +78,6 @@ export default function About() {
             </div>
           </section>
 
-          {/* Contacts */}
           <section>
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-6">Contacts</h2>
             <div className="text-sm text-muted-foreground space-y-1 leading-relaxed">
@@ -72,9 +88,7 @@ export default function About() {
           </section>
         </div>
 
-        {/* Right Column — About + Education + Languages */}
         <div className="space-y-16">
-          {/* About */}
           <section>
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-6">About</h2>
             <div className="text-muted-foreground text-sm leading-relaxed space-y-3">
@@ -89,7 +103,6 @@ export default function About() {
             </div>
           </section>
 
-          {/* Education */}
           <section>
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-6">Education</h2>
             <div className="space-y-5">
@@ -117,7 +130,6 @@ export default function About() {
             </div>
           </section>
 
-          {/* Languages */}
           <section>
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-6">Languages</h2>
             <div className="space-y-4">
@@ -132,7 +144,6 @@ export default function About() {
             </div>
           </section>
         </div>
-
       </div>
     </div>
   )

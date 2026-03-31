@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react"
-import { useTitle } from "../hooks/useTitle"
+import SEO from "../components/SEO"
 import { createProject, deleteProject, getAdminSession, getContacts, getProjectBySlug, getProjects, loginAdmin, logoutAdmin, type Project, updateProject, upload3dModel, uploadImage, uploadVideo } from "../lib/api"
 import MarkdownEditor from "../components/MarkdownEditor"
+import { buildCanonicalUrl, buildPageTitle, normalizeMetaDescription } from "../lib/seo"
+import { stripMarkdown, truncateText } from "../lib/text"
 
 type MediaFormItem = {
   url: string
@@ -12,6 +14,11 @@ type ProjectFormState = {
   slug: string
   title: string
   subtitle: string
+  seoTitle: string
+  seoDescription: string
+  focusKeywords: string
+  seoIntro: string
+  heroAlt: string
   summary: string
   industry: string
   role: string
@@ -45,6 +52,11 @@ const EMPTY_FORM: ProjectFormState = {
   slug: '',
   title: '',
   subtitle: '',
+  seoTitle: '',
+  seoDescription: '',
+  focusKeywords: '',
+  seoIntro: '',
+  heroAlt: '',
   summary: '',
   industry: '',
   role: '',
@@ -88,6 +100,11 @@ const formsEqual = (a: ProjectFormState, b: ProjectFormState) => (
   a.slug === b.slug &&
   a.title === b.title &&
   a.subtitle === b.subtitle &&
+  a.seoTitle === b.seoTitle &&
+  a.seoDescription === b.seoDescription &&
+  a.focusKeywords === b.focusKeywords &&
+  a.seoIntro === b.seoIntro &&
+  a.heroAlt === b.heroAlt &&
   a.summary === b.summary &&
   a.industry === b.industry &&
   a.role === b.role &&
@@ -114,8 +131,30 @@ const formsEqual = (a: ProjectFormState, b: ProjectFormState) => (
   a.videoUrl === b.videoUrl
 )
 
+const getCounterTone = (length: number, min: number, max: number) => {
+  if (length === 0) return 'text-muted-foreground'
+  if (length < min) return 'text-amber-600'
+  if (length > max) return 'text-red-600'
+  return 'text-emerald-600'
+}
+
+const buildSeoFallbackTitle = (title: string, tags: string) => {
+  const primaryTag = tags.split(',').map(tag => tag.trim()).filter(Boolean)[0]
+  if (!title.trim()) return 'Project – Case Study'
+  return `${title.trim()} – ${primaryTag || 'Project'} Case Study`
+}
+
+const buildSeoFallbackDescription = (form: ProjectFormState) => {
+  const source = stripMarkdown(form.subtitle || form.summary || form.problem || '')
+  if (!form.title.trim() && !source) return ''
+  const lead = form.title.trim() ? `${form.title.trim()} is a portfolio case study` : 'Portfolio case study'
+  return normalizeMetaDescription(
+    form.seoDescription.trim() || truncateText(`${lead} focused on ${source || 'design process, technical drawings, and engineering problem solving.'}`, 160)
+  )
+}
+
+
 export default function Admin() {
-  useTitle("Admin Dashboard")
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [authChecking, setAuthChecking] = useState(true)
   const [loginLoading, setLoginLoading] = useState(false)
@@ -148,6 +187,36 @@ export default function Admin() {
     () => activeTab === 'form' && !formsEqual(projForm, savedProjForm),
     [activeTab, projForm, savedProjForm]
   )
+
+  const seoKeywordList = useMemo(
+    () => projForm.focusKeywords.split(',').map(keyword => keyword.trim()).filter(Boolean),
+    [projForm.focusKeywords]
+  )
+
+  const seoTitlePreview = useMemo(
+    () => buildPageTitle(projForm.seoTitle.trim() || buildSeoFallbackTitle(projForm.title, projForm.tags)),
+    [projForm.seoTitle, projForm.title, projForm.tags]
+  )
+
+  const seoDescriptionPreview = useMemo(
+    () => buildSeoFallbackDescription(projForm),
+    [projForm]
+  )
+
+  const seoIntroPreview = useMemo(() => {
+    const fallback = `${projForm.title || 'This project'} is a case study focused on CAD drafting, technical drawings, and practical engineering problem solving.`
+    return projForm.seoIntro.trim() || fallback
+  }, [projForm.seoIntro, projForm.title])
+
+  const seoCanonicalPreview = useMemo(
+    () => buildCanonicalUrl(`/projects/${(projForm.slug || 'your-project-slug').trim()}`),
+    [projForm.slug]
+  )
+
+  const seoHeroAltPreview = useMemo(() => {
+    return projForm.heroAlt.trim() || `${projForm.title || 'Project'} hero image preview with CAD and engineering context`
+  }, [projForm.heroAlt, projForm.title])
+
 
   const setUploading = (key: UploadStateKey, value: boolean) => {
     setUploadState(prev => ({ ...prev, [key]: value }))
@@ -198,6 +267,11 @@ export default function Admin() {
     slug: project.slug,
     title: project.title,
     subtitle: project.subtitle || '',
+    seoTitle: project.seoTitle || '',
+    seoDescription: project.seoDescription || '',
+    focusKeywords: project.focusKeywords?.join(', ') || '',
+    seoIntro: project.seoIntro || '',
+    heroAlt: project.heroAlt || '',
     summary: project.summary || '',
     industry: project.industry || '',
     role: project.role || '',
@@ -407,6 +481,7 @@ export default function Admin() {
       ...projForm,
       tools: projForm.tools.split(',').map(tool => tool.trim()).filter(Boolean),
       tags: projForm.tags.split(',').map(tag => tag.trim()).filter(Boolean),
+      focusKeywords: projForm.focusKeywords.split(',').map(keyword => keyword.trim()).filter(Boolean),
       galleryImages: projForm.galleryImages,
       drawingImages: projForm.drawingImages,
       is3d: projForm.is3d,
@@ -642,13 +717,27 @@ export default function Admin() {
 
   if (authChecking) {
     return (
-      <div className="pt-32 pb-24 max-w-sm mx-auto text-center text-muted-foreground">Checking admin session...</div>
+      <>
+        <SEO
+          title="Admin Dashboard"
+          description="Private admin area for managing portfolio content."
+          path="/admin"
+          noIndex
+        />
+        <div className="pt-32 pb-24 max-w-sm mx-auto text-center text-muted-foreground">Checking admin session...</div>
+      </>
     )
   }
 
   if (!isAuthenticated) {
     return (
       <div className="pt-32 pb-24 max-w-sm mx-auto">
+        <SEO
+          title="Admin Login"
+          description="Private admin area for managing portfolio content."
+          path="/admin"
+          noIndex
+        />
         <h1 className="text-3xl font-bold mb-8">Admin Login</h1>
         <form onSubmit={handleLogin} className="space-y-4">
           <input
@@ -683,6 +772,12 @@ export default function Admin() {
 
   return (
     <div className="pt-24 lg:pt-32 pb-24 max-w-7xl mx-auto px-4 lg:px-6">
+      <SEO
+        title="Admin Dashboard"
+        description="Private admin area for managing portfolio content."
+        path="/admin"
+        noIndex
+      />
       <div className="flex justify-between items-end mb-8 border-b pb-4">
         <h1 className="text-4xl font-bold">Dashboard</h1>
         <button onClick={handleLogout} className="text-sm underline underline-offset-4">Logout</button>
@@ -875,42 +970,90 @@ export default function Admin() {
               </div>
             </section>
 
-            <section className="space-y-6">
+            <section className="space-y-5 border-t border-border/60 pt-8">
               <div className="flex flex-col gap-1">
-                <h3 className="text-lg font-semibold">Project narrative</h3>
-                <p className="text-sm text-muted-foreground">Bagian studi kasus utama yang akan dirender ke public detail page.</p>
+                <h3 className="text-lg font-semibold">SEO override</h3>
+                <p className="text-sm text-muted-foreground">Opsional. Kalau diisi, field ini akan dipakai untuk title, description, keyword, intro, dan alt text project detail page. Brand suffix <span className="font-medium">| Achmad Safain</span> ditambahkan otomatis, jadi tidak perlu ditulis manual di SEO title.</p>
               </div>
 
-              <div className="grid grid-cols-1 gap-6">
-                <MarkdownEditor
-                  label="Summary"
-                  value={projForm.summary}
-                  onChange={(value) => setProjForm({ ...projForm, summary: value })}
-                  rows={12}
-                  placeholder="Tulis ringkasan project. Mendukung heading, bold, list, link, dan line break markdown."
-                  helpText="Gunakan markdown. Contoh: **bold**, - list, [link](https://...)."
-                />
-                <MarkdownEditor
-                  label="Problem Statement"
-                  value={projForm.problem}
-                  onChange={(value) => setProjForm({ ...projForm, problem: value })}
-                  rows={14}
-                  placeholder="Jelaskan problem statement dalam markdown."
-                />
-                <MarkdownEditor
-                  label="Approach"
-                  value={projForm.approach}
-                  onChange={(value) => setProjForm({ ...projForm, approach: value })}
-                  rows={14}
-                  placeholder="Jelaskan approach dalam markdown."
-                />
-                <MarkdownEditor
-                  label="Result"
-                  value={projForm.result}
-                  onChange={(value) => setProjForm({ ...projForm, result: value })}
-                  rows={14}
-                  placeholder="Jelaskan result dalam markdown."
-                />
+              <div className="grid grid-cols-1 xl:grid-cols-[1.15fr_0.85fr] gap-6">
+                <div className="space-y-5">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <div className="xl:col-span-2">
+                      <div className="flex items-center justify-between gap-3 mb-1">
+                        <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground block">SEO Title</label>
+                        <span className={`text-[11px] font-medium ${getCounterTone(seoTitlePreview.length, 50, 65)}`}>{seoTitlePreview.length}/65</span>
+                      </div>
+                      <input type="text" className="w-full border p-2 bg-background outline-none" value={projForm.seoTitle} onChange={e => setProjForm({ ...projForm, seoTitle: e.target.value })} placeholder="Magnetic Trap for Pfister Feeder – Cement Plant CAD Case Study" />
+                      <p className="text-[11px] text-muted-foreground mt-2">Jangan tambahkan <span className="font-medium">| Achmad Safain</span>; sistem akan menambahkannya otomatis.</p>
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between gap-3 mb-1">
+                        <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground block">Hero Alt Text</label>
+                        <span className={`text-[11px] font-medium ${getCounterTone(seoHeroAltPreview.length, 60, 125)}`}>{seoHeroAltPreview.length}/125</span>
+                      </div>
+                      <input type="text" className="w-full border p-2 bg-background outline-none" value={projForm.heroAlt} onChange={e => setProjForm({ ...projForm, heroAlt: e.target.value })} placeholder="Descriptive alt text for hero image" />
+                    </div>
+                    <div className="xl:col-span-3">
+                      <div className="flex items-center justify-between gap-3 mb-1">
+                        <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground block">SEO Description</label>
+                        <span className={`text-[11px] font-medium ${getCounterTone(seoDescriptionPreview.length, 140, 160)}`}>{seoDescriptionPreview.length}/160</span>
+                      </div>
+                      <textarea rows={3} className="w-full border p-2 bg-background outline-none" value={projForm.seoDescription} onChange={e => setProjForm({ ...projForm, seoDescription: e.target.value })} placeholder="150-160 character summary covering the solution, context, and problem solved." />
+                    </div>
+                    <div className="xl:col-span-3">
+                      <div className="flex items-center justify-between gap-3 mb-1">
+                        <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground block">Focus Keywords (comma separated)</label>
+                        <span className={`text-[11px] font-medium ${seoKeywordList.length >= 5 && seoKeywordList.length <= 8 ? 'text-emerald-600' : seoKeywordList.length === 0 ? 'text-muted-foreground' : 'text-amber-600'}`}>{seoKeywordList.length} keyword{seoKeywordList.length === 1 ? '' : 's'}</span>
+                      </div>
+                      <input type="text" className="w-full border p-2 bg-background outline-none" value={projForm.focusKeywords} onChange={e => setProjForm({ ...projForm, focusKeywords: e.target.value })} placeholder="magnetic trap design, Pfister feeder protection, cement plant CAD case study" />
+                      <p className="text-[11px] text-muted-foreground mt-2">Rekomendasi 5–8 keyword phrase yang benar-benar relevan. Tidak perlu terlalu banyak.</p>
+                    </div>
+                    <div className="xl:col-span-3">
+                      <div className="flex items-center justify-between gap-3 mb-1">
+                        <label className="text-xs uppercase font-bold tracking-widest text-muted-foreground block">SEO Intro</label>
+                        <span className={`text-[11px] font-medium ${getCounterTone(seoIntroPreview.length, 90, 220)}`}>{seoIntroPreview.length} chars</span>
+                      </div>
+                      <textarea rows={4} className="w-full border p-2 bg-background outline-none" value={projForm.seoIntro} onChange={e => setProjForm({ ...projForm, seoIntro: e.target.value })} placeholder="One strong intro sentence for the project detail page." />
+                    </div>
+                  </div>
+                </div>
+
+                <aside className="border border-border/60 bg-background/70 p-4 space-y-4 self-start">
+                  <div>
+                    <h4 className="text-sm font-semibold">SEO Preview</h4>
+                    <p className="text-xs text-muted-foreground mt-1">Preview kasar untuk snippet pencarian dan fallback metadata route project.</p>
+                  </div>
+
+                  <div className="border border-border/60 bg-background p-4 space-y-2">
+                    <p className="text-xs text-emerald-700 break-all">{seoCanonicalPreview}</p>
+                    <p className="text-lg leading-snug text-blue-700 font-medium">{seoTitlePreview}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{seoDescriptionPreview || 'SEO description preview will appear here.'}</p>
+                  </div>
+
+                  <div className="space-y-3 text-sm">
+                    <div>
+                      <p className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground mb-1">Canonical</p>
+                      <p className="break-all">{seoCanonicalPreview}</p>
+                    </div>
+                    <div>
+                      <p className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground mb-1">Hero alt preview</p>
+                      <p>{seoHeroAltPreview}</p>
+                    </div>
+                    <div>
+                      <p className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground mb-1">Keyword chips</p>
+                      <div className="flex flex-wrap gap-2">
+                        {seoKeywordList.length > 0 ? seoKeywordList.map(keyword => (
+                          <span key={keyword} className="px-2.5 py-1 text-xs border border-border rounded-full bg-background">
+                            {keyword}
+                          </span>
+                        )) : (
+                          <span className="text-muted-foreground text-xs">Belum ada keyword yang dipisahkan dengan koma.</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </aside>
               </div>
             </section>
 

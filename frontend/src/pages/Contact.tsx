@@ -1,9 +1,8 @@
 import { useState } from "react"
+import SEO from "../components/SEO"
 import { submitContactForm } from "../lib/api"
-import { useTitle } from "../hooks/useTitle"
 
 export default function Contact() {
-  useTitle("Contact")
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
@@ -30,10 +29,21 @@ export default function Contact() {
 
   return (
     <div className="pt-24 lg:pt-32 pb-24 max-w-7xl mx-auto px-4 lg:px-8">
+      <SEO
+        title="Contact"
+        description="Get in touch with Achmad Safain for mechanical drafting, industrial design, 3D modeling, and engineering-focused collaboration or freelance inquiries."
+        path="/contact"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "ContactPage",
+          name: "Contact Achmad Safain",
+          url: "https://linearsaf.com/contact"
+        }}
+      />
+
       <h1 className="text-5xl md:text-6xl font-bold tracking-tighter mb-16">Contact</h1>
 
       <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
-        {/* Left Column (Golden Ratio: ~61.8%) - Form */}
         <div className="w-full lg:w-[61.8%]">
           {success ? (
             <div className="p-12 border border-border bg-muted/30 text-center space-y-4 rounded-sm">
@@ -104,7 +114,6 @@ export default function Contact() {
           )}
         </div>
 
-        {/* Right Column (Golden Ratio: ~38.2%) - Direct Contact */}
         <div className="w-full lg:w-[38.2%]">
           <div className="sticky top-32 border-t border-border pt-8 lg:border-t-0 lg:pt-0">
             <h2 className="text-2xl font-bold tracking-tighter mb-10">Direct Contact</h2>

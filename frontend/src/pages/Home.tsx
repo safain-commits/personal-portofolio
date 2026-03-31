@@ -3,11 +3,29 @@ import { Link } from "react-router-dom"
 import ProjectCard from "../components/ProjectCard"
 import SkillProfile from "../components/SkillProfile"
 import { getProjects, type Project } from "../lib/api"
-import { useTitle } from "../hooks/useTitle"
+import SEO from "../components/SEO"
+import { SITE_URL } from "../lib/seo"
 import { stripMarkdown, truncateText } from "../lib/text"
 
 export default function Home() {
-  useTitle("Portfolio")
+  const coreSearchTopics = [
+    "Mechanical Drafting",
+    "Technical Drawings",
+    "3D CAD Modeling",
+    "Industrial Design",
+    "Product Design",
+    "Engineering Design",
+  ]
+
+  const softwareKeywords = [
+    "Autodesk Inventor",
+    "AutoCAD Drafting",
+    "SolidWorks Modeling",
+    "Blender Visualization",
+    "Design for Manufacturing",
+    "3D Product Visualization",
+  ]
+
   const [projects, setProjects] = useState<Project[]>([])
   const [featuredProjects, setFeaturedProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
@@ -22,6 +40,42 @@ export default function Home() {
 
   return (
     <div className="space-y-32 pb-32 overflow-x-hidden">
+      <SEO
+        title="Mechanical Drafter, Industrial Designer & 3D CAD Portfolio"
+        description="Portfolio of Achmad Safain featuring mechanical drafting, industrial design, 3D CAD modeling, technical drawings, and engineering design case studies."
+        path="/"
+        structuredData={[
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "Achmad Safain Portfolio",
+            url: SITE_URL
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            name: "Achmad Safain",
+            url: SITE_URL,
+            jobTitle: "Mechanical Drafter and Industrial Designer",
+            sameAs: [
+              "https://www.linkedin.com/in/achmad-safain/",
+              "https://www.instagram.com/hy_saf/"
+            ],
+            knowsAbout: [
+              "Mechanical Drafting",
+              "Technical Drawings",
+              "3D CAD Modeling",
+              "Industrial Design",
+              "Product Design",
+              "Engineering Design",
+              "Autodesk Inventor",
+              "AutoCAD",
+              "SolidWorks",
+              "Blender"
+            ]
+          }
+        ]}
+      />
       {/* Hero Section */}
       <section className="mb-0 min-h-screen pt-0 lg:pt-16 md:pt-8 sm:pt-4 pb-16 w-full flex flex-col items-center justify-center text-foreground">
 
@@ -55,7 +109,10 @@ export default function Home() {
           <div className="relative w-full flex justify-center items-center">
             <img
               src="/img/hero-illustration.png"
-              alt="Hero Illustration"
+              alt="Portfolio hero illustration representing Achmad Safain's drafting and 3D design work"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
               className="w-full max-w-4xl object-contain theme-invert"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="300" viewBox="0 0 800 300"><rect fill="transparent" width="800" height="300"/><text fill="%23000000" font-family="sans-serif" font-size="20" font-weight="bold" x="50%" y="50%" text-anchor="middle">Simpan gambar ilustrasi hero Anda di frontend/public/img/hero-illustration.png</text></svg>';
@@ -73,6 +130,48 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] items-start border-y border-border/60 py-12 lg:py-16">
+          <div className="space-y-5 max-w-3xl">
+            <p className="text-xs sm:text-sm uppercase tracking-[0.3em] font-semibold text-muted-foreground">
+              Mechanical drafting • industrial design • 3D CAD modeling
+            </p>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-tight">
+              Mechanical Drafting, Industrial Design &amp; 3D CAD Modeling Portfolio
+            </h2>
+            <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
+              I&apos;m Achmad Safain, a mechanical drafter and industrial designer based in Indonesia.
+              This portfolio highlights technical drawings, 3D CAD modeling, product design,
+              and engineering design work built for practical fabrication, plant reliability,
+              and real industrial implementation.
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-bold uppercase tracking-[0.25em] text-muted-foreground mb-3">Core search topics</h3>
+              <div className="flex flex-wrap gap-2">
+                {coreSearchTopics.map(topic => (
+                  <span key={topic} className="px-3 py-1.5 text-sm border border-border bg-background/70 rounded-full">
+                    {topic}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h3 className="text-sm font-bold uppercase tracking-[0.25em] text-muted-foreground mb-3">Software & workflow</h3>
+              <div className="flex flex-wrap gap-2">
+                {softwareKeywords.map(topic => (
+                  <span key={topic} className="px-3 py-1.5 text-sm border border-border bg-background/70 rounded-full">
+                    {topic}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Skills Snippet */}
       <section className="mb-16 sm:mb-16 md:mb-20 lg:mb-28 mt-0 sm:mt-0 lg:mt-0 w-screen relative left-1/2 -translate-x-1/2 bg-muted">
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:py-24 lg:py-48 py-12">
@@ -83,7 +182,7 @@ export default function Home() {
               <div>
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-6 font-joystix">Expertise</h2>
                 <p className="text-muted-foreground leading-relaxed max-w-sm">
-                  A comprehensive toolkit spanning 3D CAD modeling, rendering, and traditional 2D drafting.
+                  A comprehensive toolkit spanning mechanical drafting, 3D CAD modeling, technical drawings, rendering, and engineering-focused design workflows.
                 </p>
               </div>
               <div className="space-y-2 max-w-sm">
@@ -153,7 +252,7 @@ export default function Home() {
       <section className="pt-0 sm:pt-0 md:pt-8 lg:pt-16 pb-16 sm:pb-16 md:pb-20 lg:pb-28 w-screen relative left-1/2 -translate-x-1/2">
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-end mb-12 border-b border-border pb-4">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Works</h2>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Selected CAD, Design & Engineering Projects</h2>
             <Link to="/projects" className="font-semibold hover:underline underline-offset-4 hidden sm:block">
               See all projects &rarr;
             </Link>
@@ -202,7 +301,7 @@ export default function Home() {
                       <div className="hidden lg:block">
                         <img
                           src={featuredProject.backgroundImageUrl || featuredProject.imageUrl!}
-                          alt={featuredProject.title}
+                          alt={`${featuredProject.title} featured industrial design and CAD project preview`}
                           className="w-full h-auto block group-hover:scale-[1.02] transition-transform duration-700"
                         />
                         {/* Text overlay on desktop */}
@@ -230,7 +329,7 @@ export default function Home() {
                       <div className="lg:hidden">
                         <img
                           src={featuredProject.backgroundImageUrl || featuredProject.imageUrl!}
-                          alt={featuredProject.title}
+                          alt={`${featuredProject.title} featured industrial design and CAD project preview`}
                           className="w-full h-auto block"
                         />
                         <div className="p-8">

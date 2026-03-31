@@ -1,0 +1,41 @@
+{
+  "YOUR-SLUG": {
+    "seoTitle": "Keyword-led project title without brand suffix",
+    "seoDescription": "150-160 character summary covering the solution, context, and problem solved in this project.",
+    "focusKeywords": [
+      "primary keyword",
+      "problem keyword",
+      "industry/context keyword",
+      "capability keyword",
+      "software keyword"
+    ],
+    "intro": "One strong introductory sentence for the project page that explains what was designed, for what context, and why it matters.",
+    "heroAlt": "Descriptive hero image alt text that explains the project visually and contextually"
+  },
+  "EXAMPLE-INDUSTRIAL-EQUIPMENT": {
+    "seoTitle": "Industrial Equipment Bracket – Mechanical Drafting Case Study",
+    "seoDescription": "Mechanical drafting case study for an industrial equipment bracket, covering CAD detailing, fabrication-ready drawings, and assembly fit considerations.",
+    "focusKeywords": [
+      "mechanical drafting case study",
+      "industrial equipment design",
+      "technical drawings",
+      "fabrication-ready CAD",
+      "AutoCAD drafting"
+    ],
+    "intro": "This project is a mechanical drafting case study focused on turning an industrial equipment concept into fabrication-ready CAD drawings and practical assembly detail.",
+    "heroAlt": "Mechanical drafting case study showing an industrial equipment bracket with fabrication-ready CAD details"
+  },
+  "EXAMPLE-PRODUCT-DESIGN": {
+    "seoTitle": "Portable Appliance Concept – Product Design Case Study",
+    "seoDescription": "Product design case study covering concept development, 3D CAD modeling, form exploration, and practical design considerations for a portable appliance.",
+    "focusKeywords": [
+      "product design case study",
+      "portable appliance design",
+      "3D CAD modeling",
+      "industrial design portfolio",
+      "Blender visualization"
+    ],
+    "intro": "This project is a product design case study focused on concept development, 3D CAD modeling, and design decisions that balance usability, form, and manufacturability.",
+    "heroAlt": "Portable appliance product design case study with 3D CAD model and industrial design visualization"
+  }
+}
