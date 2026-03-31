@@ -10,20 +10,20 @@ import { stripMarkdown, truncateText } from "../lib/text"
 export default function Home() {
   const coreSearchTopics = [
     "Mechanical Drafting",
-    "Technical Drawings",
+    "Engineering Support",
     "3D CAD Modeling",
-    "Industrial Design",
-    "Product Design",
-    "Engineering Design",
+    "Shop Drawings",
+    "As-Built Drawings",
+    "Cement Plant Equipment",
   ]
 
   const softwareKeywords = [
     "Autodesk Inventor",
-    "AutoCAD Drafting",
-    "SolidWorks Modeling",
-    "Blender Visualization",
-    "Design for Manufacturing",
-    "3D Product Visualization",
+    "AutoCAD",
+    "STAAD.Pro",
+    "FEA Simulation",
+    "Fabrication Documentation",
+    "Site Execution Support",
   ]
 
   const [projects, setProjects] = useState<Project[]>([])
@@ -41,8 +41,8 @@ export default function Home() {
   return (
     <div className="space-y-32 pb-32 overflow-x-hidden">
       <SEO
-        title="Mechanical Drafter, Industrial Designer & 3D CAD Portfolio"
-        description="Portfolio of Achmad Safain featuring mechanical drafting, industrial design, 3D CAD modeling, technical drawings, and engineering design case studies."
+        title="Mechanical Drafter, Engineering Support & 3D CAD Portfolio"
+        description="Portfolio of Achmad Safain featuring mechanical drafting, engineering support, 3D CAD modeling, cement plant documentation, technical drawings, and fabrication-oriented design work."
         path="/"
         structuredData={[
           {
@@ -56,7 +56,7 @@ export default function Home() {
             "@type": "Person",
             name: "Achmad Safain",
             url: SITE_URL,
-            jobTitle: "Mechanical Drafter and Industrial Designer",
+            jobTitle: "Mechanical Drafter, Engineering Support & 3D CAD Modeler",
             sameAs: [
               "https://www.linkedin.com/in/achmad-safain/",
               "https://www.instagram.com/hy_saf/"
@@ -65,13 +65,14 @@ export default function Home() {
               "Mechanical Drafting",
               "Technical Drawings",
               "3D CAD Modeling",
-              "Industrial Design",
-              "Product Design",
-              "Engineering Design",
+              "Engineering Support",
+              "Cement Plant Equipment",
+              "Shop Drawings",
+              "As-Built Drawings",
               "Autodesk Inventor",
               "AutoCAD",
-              "SolidWorks",
-              "Blender"
+              "STAAD.Pro",
+              "FEA Simulation"
             ]
           }
         ]}
@@ -121,10 +122,10 @@ export default function Home() {
 
             {/* Floating Text — justified left & right */}
             <div className="absolute bottom-0 md:bottom-8 left-0 md:left-8 lg:left-16 text-l sm:text-2xl md:text-3xl font-black leading-tight tracking-tighter text-left">
-              Drafter &<br />3D Modeling
+              Drafter &<br />3D CAD
             </div>
             <div className="absolute bottom-0 md:bottom-8 right-0 md:right-8 lg:right-16 text-l sm:text-2xl md:text-3xl font-black leading-tight tracking-tighter text-right">
-              Design &<br />Engineering
+              Plant &<br />Engineering
             </div>
           </div>
         </div>
@@ -134,16 +135,16 @@ export default function Home() {
         <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] items-start border-y border-border/60 py-12 lg:py-16">
           <div className="space-y-5 max-w-3xl">
             <p className="text-xs sm:text-sm uppercase tracking-[0.3em] font-semibold text-muted-foreground">
-              Mechanical drafting • industrial design • 3D CAD modeling
+              Mechanical drafting • engineering support • 3D CAD modeling
             </p>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-tight">
-              Mechanical Drafting, Industrial Design &amp; 3D CAD Modeling Portfolio
+              Mechanical Drafting, Engineering Support &amp; 3D CAD Modeling Portfolio
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-              I&apos;m Achmad Safain, a mechanical drafter and industrial designer based in Indonesia.
-              This portfolio highlights technical drawings, 3D CAD modeling, product design,
-              and engineering design work built for practical fabrication, plant reliability,
-              and real industrial implementation.
+              I&apos;m Achmad Safain, a mechanical drafter, engineering support professional, and 3D CAD modeler based in Indonesia.
+              This portfolio focuses on cement plant-related documentation, technical drawings,
+              3D modeling, structural support work, and fabrication-oriented engineering outputs
+              built for approval, presentation, and site execution.
             </p>
           </div>
 
@@ -182,16 +183,16 @@ export default function Home() {
               <div>
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-6 font-joystix">Expertise</h2>
                 <p className="text-muted-foreground leading-relaxed max-w-sm">
-                  A comprehensive toolkit spanning mechanical drafting, 3D CAD modeling, technical drawings, rendering, and engineering-focused design workflows.
+                  A practical toolkit built around mechanical drafting, 3D CAD modeling, technical documentation, structural support work, and engineering communication for real plant conditions.
                 </p>
               </div>
               <div className="space-y-2 max-w-sm">
                 <SkillProfile name="Autodesk Inventor" level={5} />
-                <SkillProfile name="Autodesk AutoCAD" level={5} />
+                <SkillProfile name="AutoCAD" level={5} />
                 <SkillProfile name="Blender" level={4} />
-                <SkillProfile name="Solidworks" level={4} />
+                <SkillProfile name="SolidWorks" level={4} />
                 <SkillProfile name="DaVinci Resolve" level={4} />
-                <SkillProfile name="Ilustrator" level={4} />
+                <SkillProfile name="Adobe Illustrator" level={4} />
               </div>
               <Link to="/about" className="inline-block mt-8 font-semibold hover:underline underline-offset-4">
                 More about my capabilities &rarr;
@@ -209,21 +210,21 @@ export default function Home() {
                       <h4 className="font-bold text-sm">Bachelor in Data Science</h4>
                       <p className="text-muted-foreground text-sm mt-0.5">Universitas Terbuka, Surabaya</p>
                     </div>
-                    <span className="text-sm text-muted-foreground whitespace-nowrap">25/26 - Today</span>
+                    <span className="text-sm text-muted-foreground whitespace-nowrap">2025 – Present</span>
                   </div>
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-2 sm:gap-4">
                     <div>
-                      <h4 className="font-bold text-sm">Interior Design</h4>
-                      <p className="text-muted-foreground text-sm mt-0.5">Indonesian Institute in the Arts, Surakarta</p>
+                      <h4 className="font-bold text-sm">Bachelor in Interior Design</h4>
+                      <p className="text-muted-foreground text-sm mt-0.5">Indonesian Institute of the Arts, Surakarta</p>
                     </div>
-                    <span className="text-sm text-muted-foreground whitespace-nowrap">14/15 - 19/20</span>
+                    <span className="text-sm text-muted-foreground whitespace-nowrap">2014 – 2020</span>
                   </div>
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-2 sm:gap-4">
                     <div>
                       <h4 className="font-bold text-sm">Bachelor in Informatics Engineering</h4>
-                      <p className="text-muted-foreground text-sm mt-0.5">UPN Veteran, Jawa Timur</p>
+                      <p className="text-muted-foreground text-sm mt-0.5">UPN Veteran Jawa Timur, Surabaya</p>
                     </div>
-                    <span className="text-sm text-muted-foreground whitespace-nowrap">11/12 - 14/15</span>
+                    <span className="text-sm text-muted-foreground whitespace-nowrap">2011 – 2015</span>
                   </div>
                 </div>
               </section>
@@ -234,11 +235,11 @@ export default function Home() {
                 <div className="space-y-4">
                   <div>
                     <h4 className="font-bold text-sm">Indonesian</h4>
-                    <p className="text-muted-foreground text-sm">Native language</p>
+                    <p className="text-muted-foreground text-sm">Native</p>
                   </div>
                   <div>
                     <h4 className="font-bold text-sm">English</h4>
-                    <p className="text-muted-foreground text-sm">B1 English level</p>
+                    <p className="text-muted-foreground text-sm">Working proficiency (B1)</p>
                   </div>
                 </div>
               </section>
@@ -252,7 +253,7 @@ export default function Home() {
       <section className="pt-0 sm:pt-0 md:pt-8 lg:pt-16 pb-16 sm:pb-16 md:pb-20 lg:pb-28 w-screen relative left-1/2 -translate-x-1/2">
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-end mb-12 border-b border-border pb-4">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Selected CAD, Design & Engineering Projects</h2>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Selected Plant, CAD & Engineering Projects</h2>
             <Link to="/projects" className="font-semibold hover:underline underline-offset-4 hidden sm:block">
               See all projects &rarr;
             </Link>

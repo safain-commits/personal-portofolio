@@ -1,10 +1,10 @@
 export const SITE_NAME = "Achmad Safain"
 export const SITE_URL = (import.meta.env.VITE_SITE_URL || "https://linearsaf.com").replace(/\/$/, "")
-export const DEFAULT_DESCRIPTION = "Portfolio of Achmad Safain featuring mechanical drafting, industrial design, 3D CAD modeling, technical drawings, and engineering design case studies."
+export const DEFAULT_DESCRIPTION = "Portfolio of Achmad Safain featuring mechanical drafting, engineering support, 3D CAD modeling, cement plant documentation, technical drawings, and fabrication-oriented engineering work."
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/img/hero-illustration.png`
 
 export function buildPageTitle(title?: string) {
-  if (!title) return `${SITE_NAME} — Mechanical Drafter & Industrial Designer`
+  if (!title) return `${SITE_NAME} — Mechanical Drafter, Engineering Support & 3D CAD Modeler`
   return `${title} | ${SITE_NAME}`
 }
 

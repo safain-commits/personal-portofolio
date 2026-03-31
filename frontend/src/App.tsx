@@ -7,6 +7,7 @@ const Projects = lazy(() => import("./pages/Projects"))
 const ProjectDetail = lazy(() => import("./pages/ProjectDetail"))
 const About = lazy(() => import("./pages/About"))
 const Contact = lazy(() => import("./pages/Contact"))
+const Cv = lazy(() => import("./pages/Cv"))
 const Admin = lazy(() => import("./pages/Admin"))
 
 function LoadingScreen() {
@@ -27,6 +28,8 @@ function App() {
           <Route path="projects/:slug" element={<ProjectDetail />} />
           <Route path="about" element={<About />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="cv" element={<Cv />} />
+          <Route path="cv/id" element={<Cv />} />
           <Route path="admin" element={<Admin />} />
         </Route>
       </Routes>

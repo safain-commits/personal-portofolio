@@ -26,6 +26,15 @@ backend/db/backups/
 *.log
 npm-debug.log*
 
+# Local backup / patch artifacts
+*.bak
+*.bak.*
+*.tmp
+*.temp
+*.orig
+*.rej
+*~
+
 # Documentation & References (excluded as requested)
 References/
 PRD-Backend.md

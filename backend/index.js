@@ -150,6 +150,8 @@ app.get('/sitemap.xml', async (req, res, next) => {
       { path: '/', changefreq: 'weekly', priority: '1.0' },
       { path: '/projects', changefreq: 'weekly', priority: '0.9' },
       { path: '/about', changefreq: 'monthly', priority: '0.7' },
+      { path: '/cv', changefreq: 'monthly', priority: '0.7' },
+      { path: '/cv/id', changefreq: 'monthly', priority: '0.7' },
       { path: '/contact', changefreq: 'monthly', priority: '0.7' },
     ];
 

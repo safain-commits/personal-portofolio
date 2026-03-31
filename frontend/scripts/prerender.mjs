@@ -21,7 +21,7 @@ const escapeHtml = (value = '') => String(value)
   .replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;')
 
-const buildPageTitle = (title) => title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Mechanical Drafter & Industrial Designer`
+const buildPageTitle = (title) => title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Mechanical Drafter, Engineering Support & 3D CAD Modeler`
 const buildCanonicalUrl = (pathname = '/') => {
   if (/^https?:\/\//i.test(pathname)) return pathname
   const normalized = pathname.startsWith('/') ? pathname : `/${pathname}`
@@ -143,8 +143,8 @@ function staticPages() {
   return [
     {
       path: '/',
-      title: buildPageTitle('Mechanical Drafter, Industrial Designer & 3D CAD Portfolio'),
-      description: 'Portfolio of Achmad Safain featuring mechanical drafting, industrial design, 3D CAD modeling, technical drawings, and engineering design case studies.',
+      title: buildPageTitle('Mechanical Drafter, Engineering Support & 3D CAD Portfolio'),
+      description: 'Portfolio of Achmad Safain featuring mechanical drafting, engineering support, 3D CAD modeling, cement plant documentation, technical drawings, and fabrication-oriented engineering work.',
       robots: DEFAULT_ROBOTS,
       canonical: buildCanonicalUrl('/'),
       image: DEFAULT_OG_IMAGE,
@@ -161,7 +161,7 @@ function staticPages() {
           '@type': 'Person',
           name: 'Achmad Safain',
           url: SITE_URL,
-          jobTitle: 'Mechanical Drafter and Industrial Designer',
+          jobTitle: 'Mechanical Drafter, Engineering Support & 3D CAD Modeler',
           sameAs: [
             'https://www.linkedin.com/in/achmad-safain/',
             'https://www.instagram.com/hy_saf/'
@@ -170,13 +170,14 @@ function staticPages() {
             'Mechanical Drafting',
             'Technical Drawings',
             '3D CAD Modeling',
-            'Industrial Design',
-            'Product Design',
-            'Engineering Design',
+            'Engineering Support',
+            'Cement Plant Equipment',
+            'Shop Drawings',
+            'As-Built Drawings',
             'Autodesk Inventor',
             'AutoCAD',
-            'SolidWorks',
-            'Blender'
+            'STAAD.Pro',
+            'FEA Simulation'
           ]
         }
       ]
@@ -184,7 +185,7 @@ function staticPages() {
     {
       path: '/about',
       title: buildPageTitle('About'),
-      description: 'Learn more about Achmad Safain, a mechanical drafter and industrial designer with experience in CAD, 3D modeling, technical drafting, and engineering-focused design work.',
+      description: 'Learn more about Achmad Safain, a mechanical drafter, engineering support professional, and 3D CAD modeler with experience in cement plant documentation, technical drafting, structural support work, and fabrication-oriented design communication.',
       robots: DEFAULT_ROBOTS,
       canonical: buildCanonicalUrl('/about'),
       image: DEFAULT_OG_IMAGE,
@@ -198,11 +199,85 @@ function staticPages() {
           '@type': 'Person',
           name: 'Achmad Safain',
           url: SITE_URL,
-          jobTitle: 'Mechanical Drafter and Industrial Designer',
+          jobTitle: 'Mechanical Drafter, Engineering Support & 3D CAD Modeler',
           alumniOf: [
             'Universitas Terbuka',
             'Indonesian Institute of the Arts, Surakarta',
             'UPN Veteran Jawa Timur'
+          ]
+        }
+      }
+    },
+    {
+      path: '/cv',
+      title: buildPageTitle('Curriculum Vitae'),
+      description: 'Professional CV of Achmad Safain, Mechanical Drafter, Engineering Support & 3D CAD Modeler, featuring cement plant drafting scope, 3D modeling, structural support work, and selected technical experience.',
+      robots: DEFAULT_ROBOTS,
+      canonical: buildCanonicalUrl('/cv'),
+      image: toAbsoluteUrl('/img/cv-profile-3x4.jpg') || DEFAULT_OG_IMAGE,
+      ogType: 'profile',
+      structuredData: {
+        '@context': 'https://schema.org',
+        '@type': 'ProfilePage',
+        name: 'Curriculum Vitae — Achmad Safain',
+        url: `${SITE_URL}/cv`,
+        mainEntity: {
+          '@type': 'Person',
+          name: 'Achmad Safain',
+          url: SITE_URL,
+          image: `${SITE_URL}/img/cv-profile-3x4.jpg`,
+          jobTitle: 'Mechanical Drafter, Engineering Support & 3D CAD Modeler',
+          alumniOf: [
+            'Universitas Terbuka, Surabaya',
+            'Indonesian Institute of the Arts, Surakarta',
+            'UPN Veteran Jawa Timur, Surabaya'
+          ],
+          knowsAbout: [
+            'Mechanical Drafting',
+            'Industrial Design',
+            '3D CAD Modeling',
+            'Technical Drawing',
+            'Autodesk Inventor',
+            'AutoCAD',
+            'SolidWorks',
+            'Blender'
+          ]
+        }
+      }
+    },
+    {
+      path: '/cv/id',
+      title: buildPageTitle('Curriculum Vitae Bahasa Indonesia'),
+      description: 'CV profesional Achmad Safain sebagai Mechanical Drafter, Engineering Support & 3D CAD Modeler, mencakup scope drafting di cement plant, pemodelan 3D, pekerjaan struktur, dan sorotan pengalaman teknis.',
+      robots: DEFAULT_ROBOTS,
+      canonical: buildCanonicalUrl('/cv/id'),
+      image: toAbsoluteUrl('/img/cv-profile-3x4.jpg') || DEFAULT_OG_IMAGE,
+      ogType: 'profile',
+      structuredData: {
+        '@context': 'https://schema.org',
+        '@type': 'ProfilePage',
+        name: 'Curriculum Vitae Bahasa Indonesia — Achmad Safain',
+        url: `${SITE_URL}/cv/id`,
+        mainEntity: {
+          '@type': 'Person',
+          name: 'Achmad Safain',
+          url: SITE_URL,
+          image: `${SITE_URL}/img/cv-profile-3x4.jpg`,
+          jobTitle: 'Mechanical Drafter, Engineering Support & 3D CAD Modeler',
+          alumniOf: [
+            'Universitas Terbuka, Surabaya',
+            'Institut Seni Indonesia Surakarta',
+            'UPN Veteran Jawa Timur, Surabaya'
+          ],
+          knowsAbout: [
+            'Mechanical Drafting',
+            'Industrial Design',
+            '3D CAD Modeling',
+            'Technical Drawing',
+            'Autodesk Inventor',
+            'AutoCAD',
+            'SolidWorks',
+            'Blender'
           ]
         }
       }
