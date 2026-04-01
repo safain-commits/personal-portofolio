@@ -6,6 +6,7 @@ import { getProjects, type Project } from "../lib/api"
 import SEO from "../components/SEO"
 import { SITE_URL } from "../lib/seo"
 import { stripMarkdown, truncateText } from "../lib/text"
+import { getPrimaryProjectLabel } from "../lib/projectTaxonomy"
 
 export default function Home() {
   const coreSearchTopics = [
@@ -110,7 +111,7 @@ export default function Home() {
           <div className="relative w-full flex justify-center items-center">
             <img
               src="/img/hero-illustration.png"
-              alt="Portfolio hero illustration representing Achmad Safain's drafting and 3D design work"
+              alt="Portfolio hero illustration representing Achmad Safain's mechanical drafting, engineering support, and 3D CAD work"
               loading="eager"
               fetchPriority="high"
               decoding="async"
@@ -276,7 +277,7 @@ export default function Home() {
                   key={project.id}
                   title={project.title}
                   slug={project.slug}
-                  category={project.category}
+                  category={getPrimaryProjectLabel(project)}
                   imageUrl={project.heroImageUrl || project.imageUrl}
                   subtitle={project.subtitle}
                 />
@@ -302,7 +303,7 @@ export default function Home() {
                       <div className="hidden lg:block">
                         <img
                           src={featuredProject.backgroundImageUrl || featuredProject.imageUrl!}
-                          alt={`${featuredProject.title} featured industrial design and CAD project preview`}
+                          alt={`${featuredProject.title} featured technical project preview with drafting and CAD details`}
                           className="w-full h-auto block group-hover:scale-[1.02] transition-transform duration-700"
                         />
                         {/* Text overlay on desktop */}
@@ -330,7 +331,7 @@ export default function Home() {
                       <div className="lg:hidden">
                         <img
                           src={featuredProject.backgroundImageUrl || featuredProject.imageUrl!}
-                          alt={`${featuredProject.title} featured industrial design and CAD project preview`}
+                          alt={`${featuredProject.title} featured technical project preview with drafting and CAD details`}
                           className="w-full h-auto block"
                         />
                         <div className="p-8">

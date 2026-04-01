@@ -284,8 +284,8 @@ function staticPages() {
     },
     {
       path: '/projects',
-      title: buildPageTitle('Projects & Design Work'),
-      description: 'Browse selected projects by Achmad Safain across industrial design, mechanical drafting, 3D CAD modeling, appliance design, and engineering-focused work.',
+      title: buildPageTitle('Projects & Technical Work'),
+      description: 'Browse selected projects by Achmad Safain across mechanical drafting, engineering support, 3D CAD modeling, technical documentation, and plant-related design work.',
       robots: DEFAULT_ROBOTS,
       canonical: buildCanonicalUrl('/projects'),
       image: DEFAULT_OG_IMAGE,
@@ -293,8 +293,8 @@ function staticPages() {
       structuredData: {
         '@context': 'https://schema.org',
         '@type': 'CollectionPage',
-        name: 'Projects & Design Work',
-        description: 'Selected portfolio projects spanning industrial design, drafting, and 3D modeling.',
+        name: 'Projects & Technical Work',
+        description: 'Selected project work spanning mechanical drafting, engineering support, technical documentation, and 3D CAD modeling.',
         url: `${SITE_URL}/projects`
       }
     },

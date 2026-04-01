@@ -47,12 +47,16 @@ export default function About() {
         }}
       />
 
-      <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 mb-16 border-b border-border pb-8">
-        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-none">
-          Achmad Safain
-        </h1>
+      <div className="flex flex-col gap-4 mb-16 border-b border-border pb-8 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-none">
+            Achmad Safain
+          </h1>
+          <p className="mt-4 text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl leading-relaxed">
+            Mechanical Drafter, Engineering Support &amp; 3D CAD Modeler
+          </p>
+        </div>
         <div className="text-sm text-muted-foreground text-right leading-relaxed whitespace-nowrap">
-          <div>29/06/1991</div>
           <div>Tuban, Jawa Timur</div>
         </div>
       </div>
@@ -72,7 +76,7 @@ export default function About() {
             </div>
 
             <div className="mt-6 pt-4">
-              <h3 className="font-bold text-sm mb-1">Analysis & Support:</h3>
+              <h3 className="font-bold text-sm mb-1">Analysis & Supporting Tools</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
                 {otherSkills.join(", ")}
               </p>
@@ -84,6 +88,7 @@ export default function About() {
             <div className="text-sm text-muted-foreground space-y-1 leading-relaxed">
               <div>a_sfn@live.com</div>
               <div>+62 822 6666 3336</div>
+              <div><a href="https://www.linkedin.com/in/achmad-safain/" target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors">LinkedIn</a></div>
               <div>Instagram: @hy_saf</div>
             </div>
           </section>
@@ -92,7 +97,7 @@ export default function About() {
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-6">Curriculum Vitae</h2>
             <div className="border border-border/60 bg-muted/20 p-5 space-y-3">
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Need a formal one-page version? Open the print-ready CV for a sharper summary of my drafting scope, engineering support experience, software stack, and selected technical highlights.
+                Need a formal one-page version? Open the print-ready CV for a concise overview of my drafting scope, engineering support experience, software stack, and selected technical highlights.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link
@@ -114,21 +119,21 @@ export default function About() {
 
         <div className="space-y-16">
           <section>
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-6">About</h2>
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-6">Professional Overview</h2>
             <div className="text-muted-foreground text-sm leading-relaxed space-y-4">
               <p>
-                I work primarily in mechanical drafting, engineering support, and 3D CAD modeling for cement plant-related needs.
-                My day-to-day scope includes technical drawings, shop drawings, as-built drawings, and supporting visual documentation
-                used for fabrication, internal approval, presentations, and site execution.
+                I work in mechanical drafting, engineering support, and 3D CAD modeling, primarily for cement plant documentation and execution needs.
+                My day-to-day work includes technical drawings, shop drawings, as-built drawings, and visual documentation used for fabrication,
+                internal review, presentations, and site execution.
               </p>
               <p>
-                My experience covers RMK-related equipment and supporting work across raw mill, coal mill, kiln, preheater,
-                structural steel support, and steel bridge connections between plant buildings. I also contribute to simulation-oriented
-                tasks when needed, including FEA studies and structural analysis with STAAD.Pro.
+                My experience covers RMK-related equipment and supporting structures across raw mill, coal mill, kiln, preheater,
+                and steel bridge connections between plant buildings. I also contribute to selected analysis and simulation tasks,
+                including FEA studies and structural checks using STAAD.Pro when required.
               </p>
               <p>
-                In practice, I aim to produce documentation that is clear, fabrication-aware, and realistic for field conditions —
-                not only visually clean, but also useful for coordination and implementation.
+                I aim to produce documentation that is clear, practical, and ready to support coordination in real field conditions.
+                The focus is not only visual clarity, but also technical usefulness for fabrication, installation, and implementation.
               </p>
             </div>
           </section>

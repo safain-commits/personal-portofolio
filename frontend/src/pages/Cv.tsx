@@ -104,7 +104,7 @@ const localizedContent: Record<Locale, Content> = {
       "Autodesk Inventor",
       "AutoCAD",
       "Blender",
-      "Solidworks",
+      "SolidWorks",
       "Adobe Illustrator",
       "Adobe Photoshop",
     ],
@@ -237,7 +237,7 @@ const localizedContent: Record<Locale, Content> = {
       "Autodesk Inventor",
       "AutoCAD",
       "Blender",
-      "Solidworks",
+      "SolidWorks",
       "Adobe Illustrator",
       "Adobe Photoshop",
     ],
@@ -374,6 +374,85 @@ export default function Cv() {
       />
 
       <style>{`
+        .cv-page {
+          background: #f4f4f5;
+        }
+
+        .dark .cv-page {
+          background: #09090b;
+        }
+
+        .cv-sheet {
+          --cv-paper: #ffffff;
+          --cv-paper-muted: #fafafa;
+          --cv-paper-soft: #f4f4f5;
+          --cv-text: #18181b;
+          --cv-text-muted: #52525b;
+          --cv-border: #d4d4d8;
+          background: var(--cv-paper) !important;
+          color: var(--cv-text) !important;
+          border-color: var(--cv-border) !important;
+        }
+
+        .cv-sheet h1,
+        .cv-sheet h2,
+        .cv-sheet h3,
+        .cv-sheet p,
+        .cv-sheet li,
+        .cv-sheet span,
+        .cv-sheet a {
+          color: var(--cv-text);
+        }
+
+        .cv-sheet .cv-section-heading,
+        .cv-sheet .cv-meta-grid,
+        .cv-sheet .cv-meta-muted {
+          color: var(--cv-text-muted) !important;
+        }
+
+        .cv-sheet .cv-link {
+          color: var(--cv-text) !important;
+          text-decoration: none;
+          transition: color 0.2s ease, text-decoration-color 0.2s ease;
+        }
+
+        .cv-sheet .cv-link:hover {
+          color: var(--cv-text-muted) !important;
+          text-decoration: underline;
+          text-underline-offset: 0.18em;
+        }
+
+        .cv-sheet .cv-accent-bar {
+          background: #27272a !important;
+        }
+
+        .cv-sheet .cv-header,
+        .cv-sheet .cv-sidebar,
+        .cv-sheet .cv-card,
+        .cv-sheet .cv-strength-card,
+        .cv-sheet .cv-chip,
+        .cv-sheet .cv-photo {
+          border-color: var(--cv-border) !important;
+        }
+
+        .cv-sheet .cv-sidebar,
+        .cv-sheet .cv-strength-card {
+          background: var(--cv-paper-muted) !important;
+        }
+
+        .cv-sheet .cv-card,
+        .cv-sheet .cv-chip {
+          background: var(--cv-paper) !important;
+        }
+
+        .cv-sheet .cv-chip {
+          color: var(--cv-text-muted) !important;
+        }
+
+        .cv-sheet .cv-bullet-dot {
+          background: #3f3f46 !important;
+        }
+
         @page {
           size: A4 portrait;
           margin: 10mm;
@@ -593,18 +672,18 @@ export default function Cv() {
         <div className="cv-header border-b border-zinc-300/80 px-6 py-6 md:px-8 md:py-7 lg:px-10">
           <div className="cv-header-grid grid gap-6 md:grid-cols-[1fr_170px] md:items-start">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">{content.pageEyebrow}</p>
+              <p className="cv-meta-muted text-[11px] font-semibold uppercase tracking-[0.24em]">{content.pageEyebrow}</p>
               <h1 className="cv-header-title mt-3 text-4xl font-black tracking-tight text-foreground sm:text-5xl">{content.title}</h1>
-              <p className="cv-header-role mt-2 text-lg font-medium text-foreground/90">{content.role}</p>
+              <p className="cv-header-role mt-2 text-lg font-medium">{content.role}</p>
 
-              <div className="cv-meta-grid mt-5 grid gap-2 text-sm leading-relaxed text-muted-foreground sm:grid-cols-2">
+              <div className="cv-meta-grid mt-5 grid gap-2 text-sm leading-relaxed sm:grid-cols-2">
                 <p>{content.locationLabel}</p>
-                <p><a className="hover:text-foreground hover:underline" href="mailto:a_sfn@live.com">a_sfn@live.com</a></p>
-                <p><a className="hover:text-foreground hover:underline" href="tel:+6282266663336">+62 822 6666 3336</a></p>
-                <p><a className="hover:text-foreground hover:underline" href={SITE_URL} target="_blank" rel="noreferrer">{SITE_URL.replace(/^https?:\/\//, "")}</a></p>
+                <p><a className="cv-link" href="mailto:a_sfn@live.com">a_sfn@live.com</a></p>
+                <p><a className="cv-link" href="tel:+6282266663336">+62 822 6666 3336</a></p>
+                <p><a className="cv-link" href={SITE_URL} target="_blank" rel="noreferrer">{SITE_URL.replace(/^https?:\/\//, "")}</a></p>
               </div>
 
-              <p className="cv-intro mt-5 max-w-3xl text-sm leading-7 text-foreground/90">
+              <p className="cv-intro mt-5 max-w-3xl text-sm leading-7">
                 {content.intro}
               </p>
             </div>
@@ -623,7 +702,7 @@ export default function Cv() {
           <aside className="cv-sidebar border-b border-zinc-300/80 bg-zinc-50 px-6 py-6 md:border-b-0 md:border-r md:px-7 lg:px-8 print:bg-white">
             <section className="cv-section cv-avoid-break">
               <SectionTitle>{content.coreExpertiseTitle}</SectionTitle>
-              <ul className="cv-list mt-4 space-y-2.5 text-sm leading-relaxed text-foreground/90">
+              <ul className="cv-list mt-4 space-y-2.5 text-sm leading-relaxed">
                 {content.coreSkills.map((skill) => (
                   <li key={skill} className="border-b border-border/40 pb-2 last:border-b-0 last:pb-0">{skill}</li>
                 ))}
@@ -632,7 +711,7 @@ export default function Cv() {
 
             <section className="cv-section cv-avoid-break mt-8">
               <SectionTitle>{content.softwareTitle}</SectionTitle>
-              <div className="mt-4 flex flex-wrap gap-2 text-xs leading-relaxed text-foreground/90">
+              <div className="mt-4 flex flex-wrap gap-2 text-xs leading-relaxed">
                 {content.softwareSkills.map((skill) => (
                   <span key={skill} className="cv-chip rounded-sm border border-zinc-300 bg-background px-2.5 py-1 uppercase tracking-[0.08em] print:bg-white">{skill}</span>
                 ))}
@@ -641,12 +720,12 @@ export default function Cv() {
 
             <section className="cv-section cv-avoid-break mt-8">
               <SectionTitle>{content.additionalToolsTitle}</SectionTitle>
-              <p className="cv-copy mt-4 text-sm leading-7 text-foreground/90">{content.complementarySkills.join(", ")}</p>
+              <p className="cv-copy mt-4 text-sm leading-7">{content.complementarySkills.join(", ")}</p>
             </section>
 
             <section className="cv-section cv-avoid-break mt-8">
               <SectionTitle>{content.languagesTitle}</SectionTitle>
-              <div className="cv-copy mt-4 space-y-2 text-sm leading-relaxed text-foreground/90">
+              <div className="cv-copy mt-4 space-y-2 text-sm leading-relaxed">
                 {content.languages.map((item) => (
                   <p key={item.name}><span className="font-semibold">{item.name}</span> — {item.level}</p>
                 ))}
@@ -657,10 +736,10 @@ export default function Cv() {
           <div className="cv-main px-6 py-6 md:px-8 lg:px-10">
             <section className="cv-section cv-avoid-break">
               <SectionTitle>{content.summaryTitle}</SectionTitle>
-              <div className="cv-copy mt-4 space-y-3 text-sm leading-7 text-foreground/90">
+              <div className="cv-copy mt-4 space-y-3 text-sm leading-7">
                 {content.summaryPoints.map((point) => (
                   <div key={point} className="flex gap-3">
-                    <span className="cv-bullet-dot mt-[10px] h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/70" />
+                    <span className="cv-bullet-dot mt-[10px] h-1.5 w-1.5 shrink-0 rounded-full" />
                     <p>{point}</p>
                   </div>
                 ))}
@@ -675,15 +754,15 @@ export default function Cv() {
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                       <div>
                         <h3 className="text-base font-bold tracking-tight text-foreground">{item.title}</h3>
-                        <p className="mt-1 text-sm text-muted-foreground">{item.company}</p>
+                        <p className="cv-meta-muted mt-1 text-sm">{item.company}</p>
                       </div>
-                      <span className="text-sm text-muted-foreground sm:whitespace-nowrap">{item.period}</span>
+                      <span className="cv-meta-muted text-sm sm:whitespace-nowrap">{item.period}</span>
                     </div>
 
-                    <ul className="cv-list mt-3 space-y-2 text-sm leading-7 text-foreground/90">
+                    <ul className="cv-list mt-3 space-y-2 text-sm leading-7">
                       {item.bullets.map((bullet) => (
                         <li key={bullet} className="flex gap-3">
-                          <span className="cv-bullet-dot mt-[11px] h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/70" />
+                          <span className="cv-bullet-dot mt-[11px] h-1.5 w-1.5 shrink-0 rounded-full" />
                           <span>{bullet}</span>
                         </li>
                       ))}
@@ -699,10 +778,10 @@ export default function Cv() {
                 {content.highlights.map((item) => (
                   <article key={item.title} className="cv-card border border-zinc-300/80 border-l-[3px] border-l-zinc-700 p-4">
                     <h3 className="text-base font-bold tracking-tight text-foreground">{item.title}</h3>
-                    <ul className="cv-list mt-3 space-y-2 text-sm leading-7 text-foreground/90">
+                    <ul className="cv-list mt-3 space-y-2 text-sm leading-7">
                       {item.bullets.map((bullet) => (
                         <li key={bullet} className="flex gap-3">
-                          <span className="cv-bullet-dot mt-[11px] h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/70" />
+                          <span className="cv-bullet-dot mt-[11px] h-1.5 w-1.5 shrink-0 rounded-full" />
                           <span>{bullet}</span>
                         </li>
                       ))}
@@ -719,9 +798,9 @@ export default function Cv() {
                   <div key={`${item.degree}-${item.institution}`} className="flex flex-col gap-1 border-b border-border/50 pb-4 last:border-b-0 last:pb-0 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                       <h3 className="text-sm font-bold text-foreground/95">{item.degree}</h3>
-                      <p className="mt-1 text-sm text-muted-foreground">{item.institution}</p>
+                      <p className="cv-meta-muted mt-1 text-sm">{item.institution}</p>
                     </div>
-                    <span className="text-sm text-muted-foreground sm:whitespace-nowrap">{item.period}</span>
+                    <span className="cv-meta-muted text-sm sm:whitespace-nowrap">{item.period}</span>
                   </div>
                 ))}
               </div>
@@ -731,7 +810,7 @@ export default function Cv() {
               <SectionTitle>{content.strengthsTitle}</SectionTitle>
               <div className="cv-strength-grid mt-4 grid gap-3 sm:grid-cols-2">
                 {content.strengths.map((item) => (
-                  <div key={item} className="cv-strength-card border border-zinc-300/80 bg-zinc-50 p-3 text-sm leading-relaxed text-foreground/90 print:bg-white">
+                  <div key={item} className="cv-strength-card border border-zinc-300/80 bg-zinc-50 p-3 text-sm leading-relaxed print:bg-white">
                     {item}
                   </div>
                 ))}

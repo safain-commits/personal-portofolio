@@ -111,15 +111,16 @@ export default function ProjectDetail() {
     'Mechanical drafting',
     'Technical drawings',
     '3D CAD modeling',
-    'Engineering design',
+    'Engineering support',
+    'Technical documentation',
     ...project.tags,
     ...project.tools.map(tool => `${tool} project`),
   ])
-  const projectCaseStudyTitle = project.seoTitle || projectSeoOverride?.seoTitle || `${project.title} – ${headerLabels[0] || 'Project'} Case Study`
+  const projectCaseStudyTitle = project.seoTitle || projectSeoOverride?.seoTitle || `${project.title} – Technical Project Overview`
   const leadOutcomeText = stripMarkdown(project.subtitle || project.summary || project.problem || '')
-  const projectIntro = project.seoIntro || projectSeoOverride?.intro || `${project.title} is a ${disciplineText} case study${industryText ? ` for ${industryText.toLowerCase()} applications` : ''} focused on CAD drafting, technical drawings, and practical engineering problem solving.`
+  const projectIntro = project.seoIntro || projectSeoOverride?.intro || `${project.title} is a ${disciplineText} project${industryText ? ` for ${industryText.toLowerCase()} applications` : ''} focused on mechanical drafting, technical documentation, and practical engineering coordination.`
   const seoDescription = project.seoDescription || projectSeoOverride?.seoDescription || truncateText(
-    `${project.title} is a ${disciplineText} case study${industryText ? ` for ${industryText.toLowerCase()} applications` : ''} focused on CAD drafting, technical drawings, and ${leadOutcomeText.toLowerCase()}`,
+    `${project.title} is a ${disciplineText} project${industryText ? ` for ${industryText.toLowerCase()} applications` : ''} focused on mechanical drafting, technical documentation, and ${leadOutcomeText.toLowerCase()}`,
     160
   )
   const canonicalPath = `/projects/${project.slug}`
@@ -260,8 +261,8 @@ export default function ProjectDetail() {
         {project.videoUrl && (
           <section className="space-y-4">
             <div className="max-w-3xl">
-              <h2 className="text-3xl font-bold tracking-tight mb-3">Showcase Video</h2>
-              <p className="text-muted-foreground leading-relaxed">A motion-driven overview of the industrial design concept, engineering intent, and project outcome.</p>
+              <h2 className="text-3xl font-bold tracking-tight mb-3">Project Video</h2>
+              <p className="text-muted-foreground leading-relaxed">A motion-based overview of the project scope, technical intent, and resulting design solution.</p>
             </div>
             <video
               src={project.videoUrl}
@@ -279,8 +280,8 @@ export default function ProjectDetail() {
         {project.is3d && project.modelUrl && (
           <section className="space-y-4">
             <div className="max-w-3xl">
-              <h2 className="text-3xl font-bold tracking-tight mb-3">3D Model Viewer</h2>
-              <p className="text-muted-foreground leading-relaxed">Interact with the 3D CAD model to inspect form, volume, engineering detail, and design intent from multiple angles.</p>
+              <h2 className="text-3xl font-bold tracking-tight mb-3">3D CAD Model Viewer</h2>
+              <p className="text-muted-foreground leading-relaxed">Interact with the 3D CAD model to review configuration, spatial relationships, and technical detail from multiple angles.</p>
             </div>
             <Suspense fallback={
               <div className="aspect-[16/9] bg-muted flex items-center justify-center border border-border/60 rounded-sm">
@@ -305,15 +306,15 @@ export default function ProjectDetail() {
       <section className="grid gap-8 lg:gap-10">
         <div className="grid gap-8 lg:grid-cols-3">
           <article className="border border-border/70 p-6 lg:p-8 bg-background/60 lg:col-span-1">
-            <h2 className="text-2xl font-bold tracking-tight mb-5">Design Problem</h2>
+            <h2 className="text-2xl font-bold tracking-tight mb-5">Project Context</h2>
             <MarkdownContent content={project.problem || project.summary} className="text-muted-foreground" />
           </article>
           <article className="border border-border/70 p-6 lg:p-8 bg-background/60 lg:col-span-1">
-            <h2 className="text-2xl font-bold tracking-tight mb-5">CAD & Design Approach</h2>
+            <h2 className="text-2xl font-bold tracking-tight mb-5">Drafting & Technical Approach</h2>
             <MarkdownContent content={project.approach} className="text-muted-foreground" fallback="Detailed approach to be added." />
           </article>
           <article className="border border-border/70 p-6 lg:p-8 bg-background/60 lg:col-span-1">
-            <h2 className="text-2xl font-bold tracking-tight mb-5">Engineering Result</h2>
+            <h2 className="text-2xl font-bold tracking-tight mb-5">Project Outcome</h2>
             <MarkdownContent content={project.result} className="text-muted-foreground" fallback="Outcome to be documented." />
           </article>
         </div>
@@ -323,7 +324,7 @@ export default function ProjectDetail() {
         <MediaGallery
           media={project.drawingImages}
           title="Technical Drawings"
-          description="Technical drawings, drafting outputs, and engineering-oriented visuals related to the project."
+          description="Technical drawings, drafting outputs, and documentation visuals related to the project."
           variant="drawing"
         />
       )}
@@ -332,7 +333,7 @@ export default function ProjectDetail() {
         <MediaGallery
           media={project.galleryImages}
           title="Project Gallery"
-          description="Additional imagery showcasing the project from supporting angles, details, and presentation views."
+          description="Additional imagery showing supporting views, details, and presentation material related to the project."
           variant="gallery"
         />
       )}
