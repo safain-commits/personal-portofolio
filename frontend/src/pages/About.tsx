@@ -57,7 +57,7 @@ export default function About() {
           <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-none">
             Achmad Safain
           </h1>
-          <p className="mt-2 text-xs sm:text-sm uppercase tracking-[0.28em] font-semibold text-muted-foreground">
+          <p className="hidden mt-2 text-xs sm:text-sm uppercase tracking-[0.28em] font-semibold text-muted-foreground">
             {SITE_BRAND} • LinearSAF
           </p>
           <p className="mt-4 text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl leading-relaxed">

@@ -111,7 +111,7 @@ export default function Home() {
               <h2 className="text-4xl sm:text-6xl md:text-[5.5rem] lg:text-[6.2rem] font-black tracking-tighter leading-[0.85] -mt-0 sm:-mt-0.5 lg:-mt-1">
                 Achmad Safain
               </h2>
-              <p className="mt-3 text-xs sm:text-sm md:text-base font-semibold uppercase tracking-[0.28em] text-muted-foreground">
+              <p className="hidden mt-3 text-xs sm:text-sm md:text-base font-semibold uppercase tracking-[0.28em] text-muted-foreground">
                 Safain • LinearSAF
               </p>
             </div>
@@ -155,7 +155,7 @@ export default function Home() {
               Mechanical Drafting, Engineering Support &amp; 3D CAD Modeling Portfolio
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-              I&apos;m Achmad Safain, also known online as Safain and LinearSAF, a mechanical drafter, engineering support professional, and 3D CAD modeler based in Indonesia.
+              I&apos;m Achmad Safain, also known online as LinearSAF, a mechanical drafter, engineering support professional, and 3D CAD modeler based in Indonesia.
               This portfolio focuses on cement plant-related documentation, technical drawings,
               3D modeling, structural support work, and fabrication-oriented engineering outputs
               built for approval, presentation, and site execution.
