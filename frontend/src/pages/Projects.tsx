@@ -61,7 +61,7 @@ export default function Projects() {
     <div className="container mx-auto px-6 pt-24 lg:pt-32 pb-24">
       <SEO
         title="Projects & Technical Work"
-        description="Browse selected projects by Achmad Safain across mechanical drafting, engineering support, 3D CAD modeling, technical documentation, and plant-related design work."
+        description="Browse selected projects by Achmad Safain, also known as Safain, across mechanical drafting, engineering support, 3D CAD modeling, technical documentation, and plant-related design work."
         path="/projects"
         structuredData={{
           "@context": "https://schema.org",

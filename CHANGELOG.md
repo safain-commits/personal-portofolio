@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-04-16
+
+### Added
+- inline validation and status feedback on the Contact page
+- SMTP-based email notifications for contact form submissions
+- branded HTML email template for new contact inquiries
+- route-change progress cue and subtle page-enter transition
+- explicit `Safain` alias signals in site metadata and structured data
+- detailed release notes in `docs/changelog/2026-04-16-contact-ux-email-navigation-and-safain-seo.md`
+
+### Changed
+- Contact page copy and layout were reworked for clearer inquiry guidance and better conversion UX
+- SPA navigation now resets scroll position on internal route changes
+- homepage, about page, CV, projects, contact page, and prerender output now reinforce `Safain` as the short-form brand query tied to `Achmad Safain`
+
+### Notes
+- ranking improvements for `Safain` will depend on Google recrawling and reindexing the updated pages after deployment
+
 ## 2026-03-30
 
 ### Added

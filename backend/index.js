@@ -8,6 +8,7 @@ const path = require('path');
 const crypto = require('crypto');
 const cookieParser = require('cookie-parser');
 const queries = require('./db/queries');
+const { hasMailConfig, sendContactNotification } = require('./email');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -248,8 +249,27 @@ app.post('/contact', contactLimiter, async (req, res, next) => {
     }
     
     const contact = await queries.insertContact({ name, email, message });
+    let mailResult = { configured: false, sent: false };
+
+    try {
+      mailResult = await sendContactNotification({
+        contactId: contact.id,
+        name,
+        email,
+        message,
+      });
+    } catch (mailError) {
+      console.error('[Contact Email] Failed to send notification email:', mailError);
+    }
+
     console.log(`[Contact Log] Received message from ${name} <${email}>. DB ID: ${contact.id}`);
-    res.json({ ok: true, data: { success: true } });
+    if (mailResult.configured && mailResult.sent) {
+      console.log(`[Contact Email] Notification sent for contact ${contact.id}. Message ID: ${mailResult.messageId}`);
+    } else if (!mailResult.configured) {
+      console.warn('[Contact Email] SMTP is not configured. Skipping email notification.');
+    }
+
+    res.json({ ok: true, data: { success: true, emailSent: mailResult.sent } });
   } catch (error) {
     next(error);
   }
@@ -402,4 +422,7 @@ app.use((err, req, res, next) => {
 // Start Server
 app.listen(PORT, '127.0.0.1', () => {
   console.log(`Backend server running on 127.0.0.1:${PORT}`);
+  if (!hasMailConfig()) {
+    console.warn('SMTP is not configured. Contact form submissions will be saved to the database without sending email notifications.');
+  }
 });

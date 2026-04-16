@@ -4,7 +4,7 @@ import ProjectCard from "../components/ProjectCard"
 import SkillProfile from "../components/SkillProfile"
 import { getProjects, type Project } from "../lib/api"
 import SEO from "../components/SEO"
-import { SITE_URL } from "../lib/seo"
+import { SITE_BRAND, SITE_URL } from "../lib/seo"
 import { stripMarkdown, truncateText } from "../lib/text"
 import { getPrimaryProjectLabel } from "../lib/projectTaxonomy"
 
@@ -42,20 +42,30 @@ export default function Home() {
   return (
     <div className="space-y-32 pb-32 overflow-x-hidden">
       <SEO
-        title="Mechanical Drafter, Engineering Support & 3D CAD Portfolio"
-        description="Portfolio of Achmad Safain featuring mechanical drafting, engineering support, 3D CAD modeling, cement plant documentation, technical drawings, and fabrication-oriented design work."
+        title={`${SITE_BRAND} - Mechanical Drafter, Engineering Support & 3D CAD Portfolio`}
+        description="Safain is the portfolio and personal brand of Achmad Safain, featuring mechanical drafting, engineering support, 3D CAD modeling, cement plant documentation, technical drawings, and fabrication-oriented design work."
         path="/"
         structuredData={[
           {
             "@context": "https://schema.org",
             "@type": "WebSite",
             name: "Achmad Safain Portfolio",
+            alternateName: [
+              "Safain",
+              "Safain Portfolio",
+              "LinearSAF"
+            ],
             url: SITE_URL
           },
           {
             "@context": "https://schema.org",
             "@type": "Person",
             name: "Achmad Safain",
+            alternateName: [
+              "Safain",
+              "Safain A.",
+              "LinearSAF"
+            ],
             url: SITE_URL,
             jobTitle: "Mechanical Drafter, Engineering Support & 3D CAD Modeler",
             sameAs: [
@@ -101,6 +111,9 @@ export default function Home() {
               <h2 className="text-4xl sm:text-6xl md:text-[5.5rem] lg:text-[6.2rem] font-black tracking-tighter leading-[0.85] -mt-0 sm:-mt-0.5 lg:-mt-1">
                 Achmad Safain
               </h2>
+              <p className="mt-3 text-xs sm:text-sm md:text-base font-semibold uppercase tracking-[0.28em] text-muted-foreground">
+                Safain • LinearSAF
+              </p>
             </div>
           </div>
         </div>
@@ -142,7 +155,7 @@ export default function Home() {
               Mechanical Drafting, Engineering Support &amp; 3D CAD Modeling Portfolio
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-              I&apos;m Achmad Safain, a mechanical drafter, engineering support professional, and 3D CAD modeler based in Indonesia.
+              I&apos;m Achmad Safain, also known online as Safain and LinearSAF, a mechanical drafter, engineering support professional, and 3D CAD modeler based in Indonesia.
               This portfolio focuses on cement plant-related documentation, technical drawings,
               3D modeling, structural support work, and fabrication-oriented engineering outputs
               built for approval, presentation, and site execution.

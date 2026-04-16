@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link, Outlet, useLocation } from "react-router-dom"
 import { Menu, X } from "lucide-react"
 import { cn } from "../lib/utils"
@@ -18,9 +18,36 @@ const FOOTER_LINKS = [
   { label: "CV (ID)", href: "/cv/id" },
 ] as const
 
+function RouteChangeIndicator() {
+  const location = useLocation()
+  const [active, setActive] = useState(false)
+
+  useEffect(() => {
+    setActive(true)
+    const timeoutId = window.setTimeout(() => setActive(false), 360)
+    return () => window.clearTimeout(timeoutId)
+  }, [location.pathname, location.search, location.hash])
+
+  return (
+    <div
+      aria-hidden="true"
+      className={cn("route-progress", active && "route-progress-active")}
+    />
+  )
+}
+
 function Navbar() {
   const location = useLocation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  useEffect(() => {
+    setIsMenuOpen(false)
+  }, [location.pathname, location.search, location.hash])
+
+  useEffect(() => {
+    if (location.hash) return
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" })
+  }, [location.pathname, location.search, location.hash])
 
   return (
     <header className="fixed top-0 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50 border-b border-border/50">
@@ -148,11 +175,16 @@ function Footer() {
 }
 
 export default function Layout() {
+  const location = useLocation()
+
   return (
     <div className="min-h-screen flex flex-col font-sans text-foreground bg-background selection:bg-foreground selection:text-background">
+      <RouteChangeIndicator />
       <Navbar />
       <main className="flex-1 w-full">
-        <Outlet />
+        <div key={`${location.pathname}${location.search}`} className="route-content-enter">
+          <Outlet />
+        </div>
       </main>
       <Footer />
     </div>

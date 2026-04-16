@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import SEO from "../components/SEO"
 import SkillProfile from "../components/SkillProfile"
-import { SITE_URL } from "../lib/seo"
+import { SITE_BRAND, SITE_URL } from "../lib/seo"
 
 export default function About() {
   const coreSkills = [
@@ -26,16 +26,21 @@ export default function About() {
     <div className="container mx-auto px-6 sm:px-10 lg:px-16 pt-24 lg:pt-32 pb-24 max-w-5xl">
       <SEO
         title="About"
-        description="Learn more about Achmad Safain, a mechanical drafter, engineering support professional, and 3D CAD modeler with experience in cement plant documentation, technical drafting, structural support work, and fabrication-oriented design communication."
+        description="Learn more about Safain, the personal brand of Achmad Safain, a mechanical drafter, engineering support professional, and 3D CAD modeler with experience in cement plant documentation, technical drafting, structural support work, and fabrication-oriented design communication."
         path="/about"
         structuredData={{
           "@context": "https://schema.org",
           "@type": "AboutPage",
-          name: "About Achmad Safain",
+          name: "About Achmad Safain (Safain)",
           url: `${SITE_URL}/about`,
           mainEntity: {
             "@type": "Person",
             name: "Achmad Safain",
+            alternateName: [
+              "Safain",
+              "Safain A.",
+              "LinearSAF"
+            ],
             url: SITE_URL,
             jobTitle: "Mechanical Drafter, Engineering Support & 3D CAD Modeler",
             alumniOf: [
@@ -52,6 +57,9 @@ export default function About() {
           <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-none">
             Achmad Safain
           </h1>
+          <p className="mt-2 text-xs sm:text-sm uppercase tracking-[0.28em] font-semibold text-muted-foreground">
+            {SITE_BRAND} • LinearSAF
+          </p>
           <p className="mt-4 text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl leading-relaxed">
             Mechanical Drafter, Engineering Support &amp; 3D CAD Modeler
           </p>
@@ -125,6 +133,9 @@ export default function About() {
                 I work in mechanical drafting, engineering support, and 3D CAD modeling, primarily for cement plant documentation and execution needs.
                 My day-to-day work includes technical drawings, shop drawings, as-built drawings, and visual documentation used for fabrication,
                 internal review, presentations, and site execution.
+              </p>
+              <p>
+                Online, my work is often referenced under the names Safain or LinearSAF, alongside my full name Achmad Safain. This site brings those identities together into one technical portfolio focused on practical engineering communication.
               </p>
               <p>
                 My experience covers RMK-related equipment and supporting structures across raw mill, coal mill, kiln, preheater,

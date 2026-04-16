@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom"
 import { ArrowLeft, Printer } from "lucide-react"
 import SEO from "../components/SEO"
-import { SITE_URL } from "../lib/seo"
+import { SITE_BRAND, SITE_URL } from "../lib/seo"
 
 const profilePhotoUrl = "/img/cv-profile-3x4.jpg"
 
@@ -61,7 +61,7 @@ type Content = {
 const localizedContent: Record<Locale, Content> = {
   en: {
     seoTitle: "Curriculum Vitae",
-    seoDescription: "Professional CV of Achmad Safain, Mechanical Drafter, Engineering Support & 3D CAD Modeler, featuring cement plant drafting scope, 3D modeling, structural support work, and selected technical experience.",
+    seoDescription: "Professional CV of Achmad Safain, also known as Safain, Mechanical Drafter, Engineering Support & 3D CAD Modeler, featuring cement plant drafting scope, 3D modeling, structural support work, and selected technical experience.",
     pageEyebrow: "Curriculum Vitae",
     pageLead: "Professional CV — print-ready A4",
     backLabel: "Back to About",
@@ -194,7 +194,7 @@ const localizedContent: Record<Locale, Content> = {
   },
   id: {
     seoTitle: "Curriculum Vitae Bahasa Indonesia",
-    seoDescription: "CV profesional Achmad Safain sebagai Mechanical Drafter, Engineering Support & 3D CAD Modeler, mencakup scope drafting di cement plant, pemodelan 3D, pekerjaan struktur, dan sorotan pengalaman teknis.",
+    seoDescription: "CV profesional Achmad Safain, juga dikenal sebagai Safain, sebagai Mechanical Drafter, Engineering Support & 3D CAD Modeler, mencakup scope drafting di cement plant, pemodelan 3D, pekerjaan struktur, dan sorotan pengalaman teknis.",
     pageEyebrow: "Curriculum Vitae",
     pageLead: "Versi Bahasa Indonesia — siap cetak A4",
     backLabel: "Kembali ke About",
@@ -349,6 +349,11 @@ export default function Cv() {
     mainEntity: {
       "@type": "Person",
       name: "Achmad Safain",
+      alternateName: [
+        SITE_BRAND,
+        "Safain A.",
+        "LinearSAF"
+      ],
       url: SITE_URL,
       image: `${SITE_URL}${profilePhotoUrl}`,
       jobTitle: content.role,

@@ -9,6 +9,7 @@ const distDir = path.join(rootDir, 'dist')
 const projectSeoOverridesPath = path.join(rootDir, 'src', 'content', 'project-seo-overrides.json')
 
 const SITE_NAME = 'Achmad Safain'
+const SITE_BRAND = 'Safain'
 const SITE_URL = (process.env.PRERENDER_SITE_URL || 'https://linearsaf.com').replace(/\/$/, '')
 const API_ORIGIN = (process.env.PRERENDER_API_ORIGIN || 'http://127.0.0.1:5000').replace(/\/$/, '')
 const DEFAULT_OG_IMAGE = `${SITE_URL}/img/hero-illustration.png`
@@ -143,8 +144,8 @@ function staticPages() {
   return [
     {
       path: '/',
-      title: buildPageTitle('Mechanical Drafter, Engineering Support & 3D CAD Portfolio'),
-      description: 'Portfolio of Achmad Safain featuring mechanical drafting, engineering support, 3D CAD modeling, cement plant documentation, technical drawings, and fabrication-oriented engineering work.',
+      title: buildPageTitle('Safain - Mechanical Drafter, Engineering Support & 3D CAD Portfolio'),
+      description: 'Safain is the portfolio and personal brand of Achmad Safain, featuring mechanical drafting, engineering support, 3D CAD modeling, cement plant documentation, technical drawings, and fabrication-oriented engineering work.',
       robots: DEFAULT_ROBOTS,
       canonical: buildCanonicalUrl('/'),
       image: DEFAULT_OG_IMAGE,
@@ -154,12 +155,22 @@ function staticPages() {
           '@context': 'https://schema.org',
           '@type': 'WebSite',
           name: 'Achmad Safain Portfolio',
+          alternateName: [
+            'Safain',
+            'Safain Portfolio',
+            'LinearSAF'
+          ],
           url: SITE_URL,
         },
         {
           '@context': 'https://schema.org',
           '@type': 'Person',
           name: 'Achmad Safain',
+          alternateName: [
+            'Safain',
+            'Safain A.',
+            'LinearSAF'
+          ],
           url: SITE_URL,
           jobTitle: 'Mechanical Drafter, Engineering Support & 3D CAD Modeler',
           sameAs: [
@@ -185,7 +196,7 @@ function staticPages() {
     {
       path: '/about',
       title: buildPageTitle('About'),
-      description: 'Learn more about Achmad Safain, a mechanical drafter, engineering support professional, and 3D CAD modeler with experience in cement plant documentation, technical drafting, structural support work, and fabrication-oriented design communication.',
+      description: 'Learn more about Safain, the personal brand of Achmad Safain, a mechanical drafter, engineering support professional, and 3D CAD modeler with experience in cement plant documentation, technical drafting, structural support work, and fabrication-oriented design communication.',
       robots: DEFAULT_ROBOTS,
       canonical: buildCanonicalUrl('/about'),
       image: DEFAULT_OG_IMAGE,
@@ -193,11 +204,16 @@ function staticPages() {
       structuredData: {
         '@context': 'https://schema.org',
         '@type': 'AboutPage',
-        name: 'About Achmad Safain',
+        name: 'About Achmad Safain (Safain)',
         url: `${SITE_URL}/about`,
         mainEntity: {
           '@type': 'Person',
           name: 'Achmad Safain',
+          alternateName: [
+            'Safain',
+            'Safain A.',
+            'LinearSAF'
+          ],
           url: SITE_URL,
           jobTitle: 'Mechanical Drafter, Engineering Support & 3D CAD Modeler',
           alumniOf: [
@@ -211,7 +227,7 @@ function staticPages() {
     {
       path: '/cv',
       title: buildPageTitle('Curriculum Vitae'),
-      description: 'Professional CV of Achmad Safain, Mechanical Drafter, Engineering Support & 3D CAD Modeler, featuring cement plant drafting scope, 3D modeling, structural support work, and selected technical experience.',
+      description: 'Professional CV of Achmad Safain, also known as Safain, Mechanical Drafter, Engineering Support & 3D CAD Modeler, featuring cement plant drafting scope, 3D modeling, structural support work, and selected technical experience.',
       robots: DEFAULT_ROBOTS,
       canonical: buildCanonicalUrl('/cv'),
       image: toAbsoluteUrl('/img/cv-profile-3x4.jpg') || DEFAULT_OG_IMAGE,
@@ -224,6 +240,11 @@ function staticPages() {
         mainEntity: {
           '@type': 'Person',
           name: 'Achmad Safain',
+          alternateName: [
+            'Safain',
+            'Safain A.',
+            'LinearSAF'
+          ],
           url: SITE_URL,
           image: `${SITE_URL}/img/cv-profile-3x4.jpg`,
           jobTitle: 'Mechanical Drafter, Engineering Support & 3D CAD Modeler',
@@ -248,7 +269,7 @@ function staticPages() {
     {
       path: '/cv/id',
       title: buildPageTitle('Curriculum Vitae Bahasa Indonesia'),
-      description: 'CV profesional Achmad Safain sebagai Mechanical Drafter, Engineering Support & 3D CAD Modeler, mencakup scope drafting di cement plant, pemodelan 3D, pekerjaan struktur, dan sorotan pengalaman teknis.',
+      description: 'CV profesional Achmad Safain, juga dikenal sebagai Safain, sebagai Mechanical Drafter, Engineering Support & 3D CAD Modeler, mencakup scope drafting di cement plant, pemodelan 3D, pekerjaan struktur, dan sorotan pengalaman teknis.',
       robots: DEFAULT_ROBOTS,
       canonical: buildCanonicalUrl('/cv/id'),
       image: toAbsoluteUrl('/img/cv-profile-3x4.jpg') || DEFAULT_OG_IMAGE,
@@ -261,6 +282,11 @@ function staticPages() {
         mainEntity: {
           '@type': 'Person',
           name: 'Achmad Safain',
+          alternateName: [
+            'Safain',
+            'Safain A.',
+            'LinearSAF'
+          ],
           url: SITE_URL,
           image: `${SITE_URL}/img/cv-profile-3x4.jpg`,
           jobTitle: 'Mechanical Drafter, Engineering Support & 3D CAD Modeler',
@@ -285,7 +311,7 @@ function staticPages() {
     {
       path: '/projects',
       title: buildPageTitle('Projects & Technical Work'),
-      description: 'Browse selected projects by Achmad Safain across mechanical drafting, engineering support, 3D CAD modeling, technical documentation, and plant-related design work.',
+      description: 'Browse selected projects by Achmad Safain, also known as Safain, across mechanical drafting, engineering support, 3D CAD modeling, technical documentation, and plant-related design work.',
       robots: DEFAULT_ROBOTS,
       canonical: buildCanonicalUrl('/projects'),
       image: DEFAULT_OG_IMAGE,
@@ -301,7 +327,7 @@ function staticPages() {
     {
       path: '/contact',
       title: buildPageTitle('Contact'),
-      description: 'Get in touch with Achmad Safain for mechanical drafting, industrial design, 3D modeling, and engineering-focused collaboration or freelance inquiries.',
+      description: 'Get in touch with Achmad Safain, also known as Safain, for mechanical drafting, industrial design, 3D modeling, and engineering-focused collaboration or freelance inquiries.',
       robots: DEFAULT_ROBOTS,
       canonical: buildCanonicalUrl('/contact'),
       image: DEFAULT_OG_IMAGE,
@@ -309,7 +335,7 @@ function staticPages() {
       structuredData: {
         '@context': 'https://schema.org',
         '@type': 'ContactPage',
-        name: 'Contact Achmad Safain',
+        name: 'Contact Achmad Safain (Safain)',
         url: `${SITE_URL}/contact`
       }
     },

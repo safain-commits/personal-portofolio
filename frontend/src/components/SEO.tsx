@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useLocation } from "react-router-dom"
-import { buildCanonicalUrl, buildPageTitle, DEFAULT_OG_IMAGE, normalizeMetaDescription, toAbsoluteUrl } from "../lib/seo"
+import { buildCanonicalUrl, buildPageTitle, DEFAULT_OG_IMAGE, normalizeMetaDescription, SITE_BRAND, toAbsoluteUrl } from "../lib/seo"
 
 type StructuredData = Record<string, unknown> | Array<Record<string, unknown>>
 
@@ -56,11 +56,11 @@ export default function SEO({ title, description, path, image, type = 'website',
 
     upsertCanonical(canonicalUrl)
     upsertMeta('meta[name="description"]', { name: 'description', content: metaDescription })
-    upsertMeta('meta[name="author"]', { name: 'author', content: 'Achmad Safain' })
+    upsertMeta('meta[name="author"]', { name: 'author', content: 'Achmad Safain (Safain)' })
     upsertMeta('meta[name="robots"]', { name: 'robots', content: noIndex ? ROBOTS_NOINDEX : ROBOTS_INDEX })
 
     upsertMeta('meta[property="og:type"]', { property: 'og:type', content: type })
-    upsertMeta('meta[property="og:site_name"]', { property: 'og:site_name', content: 'Achmad Safain Portfolio' })
+    upsertMeta('meta[property="og:site_name"]', { property: 'og:site_name', content: `${SITE_BRAND} | Achmad Safain Portfolio` })
     upsertMeta('meta[property="og:title"]', { property: 'og:title', content: metaTitle })
     upsertMeta('meta[property="og:description"]', { property: 'og:description', content: metaDescription })
     upsertMeta('meta[property="og:url"]', { property: 'og:url', content: canonicalUrl })
